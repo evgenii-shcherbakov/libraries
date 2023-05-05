@@ -79,16 +79,18 @@ typescript() {
     do
       if echo "${CHANGED_FILES[@]}" | grep -q "^typescript/$LIBRARY/"
         then
+          echo Process "$LIBRARY"...
+
           scripts/helpers/inject_license.sh "typescript/$LIBRARY/LICENSE"
 
           cd "typescript/$LIBRARY/" || exit 1
-          install_modules "$LIBRARY"
-          prebuild "$LIBRARY"
-          build "$LIBRARY"
+          install_modules "$LIBRARY" || exit 1
+          prebuild "$LIBRARY" || exit 1
+          build "$LIBRARY" || exit 1
 
           if [[ "$MODE" == "publish" ]]
             then
-              publish "$LIBRARY"
+              publish "$LIBRARY" || exit 1
           fi
 
           cd ../..
