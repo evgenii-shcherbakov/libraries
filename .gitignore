@@ -7,3 +7,4 @@ keystore/
 package-lock.json
 pubspec-lock.yaml
 *.env
+.npmrc

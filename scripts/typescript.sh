@@ -3,15 +3,15 @@
 MODE="$1" # required parameter (publish | build)
 GIT_USERNAME=${GIT_USERNAME:-$2}
 GIT_EMAIL=${GIT_EMAIL:-$3}
-NODE_AUTH_TOKEN=${NODE_AUTH_TOKEN:-$(cat keystore/global/npm/token.txt || echo "$4")}
+NPM_AUTH_TOKEN=${NPM_AUTH_TOKEN:-$(cat keystore/global/npm/token.txt || echo "$4")}
 
 setup_github_environment() {
   echo Setup git...
   git config user.name "$GIT_USERNAME"
   git config user.email "$GIT_EMAIL"
 
-  echo Setup github environment...
-  echo "NODE_AUTH_TOKEN=$NODE_AUTH_TOKEN" >> "$GITHUB_ENV"
+  echo Update npm...
+  npm install npm@latest -g
 }
 
 setup_local_environment() {
@@ -44,7 +44,13 @@ publish() {
   npm version patch
 
   echo Publish "$1"...
-  npm publish
+
+  if [ -z "$GITHUB_ENV" ]
+    then
+      NODE_AUTH_TOKEN="$NPM_AUTH_TOKEN" npm publish --access public
+    else
+      NODE_AUTH_TOKEN="$NPM_AUTH_TOKEN" npm publish --access public --provenance
+  fi
 
   echo Update main branch...
   git push
@@ -56,6 +62,8 @@ typescript() {
   local CHANGED_FILES
   local TYPESCRIPT_LIBRARIES
 
+  chmod +x scripts/helpers/inject_license.sh
+
   if [ -z "$GITHUB_ENV" ]
     then
       setup_local_environment
@@ -64,12 +72,15 @@ typescript() {
   fi
 
   CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-  TYPESCRIPT_LIBRARIES=$(ls -d typescript/)
+  TYPESCRIPT_LIBRARIES=$(ls -d typescript/*)
+  TYPESCRIPT_LIBRARIES=("${TYPESCRIPT_LIBRARIES[@]/typescript\//}")
 
   for LIBRARY in "${TYPESCRIPT_LIBRARIES[@]}"
     do
       if echo "${CHANGED_FILES[@]}" | grep -q "^typescript/$LIBRARY/"
         then
+          scripts/helpers/inject_license.sh "typescript/$LIBRARY/LICENSE"
+
           cd "typescript/$LIBRARY/" || exit 1
           install_modules "$LIBRARY"
           prebuild "$LIBRARY"

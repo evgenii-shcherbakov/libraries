@@ -22,12 +22,20 @@ jobs:
   Typescript:
     runs-on: 'ubuntu-latest'
 
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
     steps:
       - uses: 'actions/checkout@v3'
+        with:
+          fetch-depth: 2
       - uses: 'actions/setup-node@v3'
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
+          scope: '@iipekolict'
+          always-auth: 'true'
       - name: 'Checkout keystore repo'
         uses: 'actions/checkout@v3'
         with:

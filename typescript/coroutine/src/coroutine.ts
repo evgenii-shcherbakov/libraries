@@ -3,7 +3,7 @@ import { TAsyncMapCallback } from './types';
 import { DelayedCoroutine } from './delayed-coroutine';
 
 export class Coroutine {
-  private static readonly DELAY = 123;
+  private static readonly DELAY = 100;
 
   static async launch<
     A = void,

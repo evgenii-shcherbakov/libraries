@@ -1,10 +1,23 @@
 {
-  "name": "coroutine",
-  "version": "1.0.0",
-  "description": "Jovy framework (modified by Evgenii Shcherbakov express version)",
+  "name": "@iipekolict/coroutine",
+  "version": "1.0.24",
+  "description": "Typescript library for use multithreading",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/IIPEKOLICT/libraries.git",
+    "directory": "typescript/coroutine"
+  },
+  "bugs": {
+    "url": "https://github.com/IIPEKOLICT/libraries/issues"
+  },
+  "homepage": "https://github.com/IIPEKOLICT/libraries/tree/main/typescript/coroutine/README.md",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "nodemon",
     "format": "prettier --write src",
     "build": "rm -rf dist && tsc",
     "mount": "npm run build && npm link",
@@ -24,8 +37,5 @@
   },
   "engines": {
     "node": "18.x"
-  },
-  "dependencies": {
-    "@types/es6-promise": "^3.3.0"
   }
 }
