@@ -1,0 +1,42 @@
+name: 'Typescript'
+
+on:
+  push:
+    paths:
+      - 'typescript/**'
+    branches:
+      - 'main'
+  pull_request:
+    paths:
+      - 'typescript/**'
+    branches:
+      - 'main'
+
+env:
+  GIT_USERNAME: '${{ secrets.GIT_USERNAME }}'
+  GIT_EMAIL: '${{ secrets.GIT_EMAIL }}'
+  KEYSTORE_GIT_REPOSITORY: '${{ secrets.KEYSTORE_GIT_REPOSITORY }}'
+  KEYSTORE_ACCESS_TOKEN: '${{ secrets.KEYSTORE_ACCESS_TOKEN }}'
+
+jobs:
+  Typescript:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+      - uses: 'actions/setup-node@v3'
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: 'Checkout keystore repo'
+        uses: 'actions/checkout@v3'
+        with:
+          repository: '${{ env.KEYSTORE_GIT_REPOSITORY }}'
+          token: '${{ env.KEYSTORE_ACCESS_TOKEN }}'
+          path: 'keystore'
+      - name: 'Build libraries with changes'
+        if: 'github.event_name == \"pull_request\"'
+        run: 'chmod +x scripts/typescript.sh && scripts/typescript.sh build'
+      - name: 'Build & publish libraries with changes'
+        if: 'github.event_name == \"pull_request\"'
+        run: 'chmod +x scripts/typescript.sh && scripts/typescript.sh publish'

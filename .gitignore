@@ -3,6 +3,7 @@
 node_modules
 build/
 dist/
+keystore/
 package-lock.json
 pubspec-lock.yaml
 *.env
