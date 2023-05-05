@@ -35,8 +35,8 @@ jobs:
           token: '${{ env.KEYSTORE_ACCESS_TOKEN }}'
           path: 'keystore'
       - name: 'Build libraries with changes'
-        if: 'github.event_name == \"pull_request\"'
+        if: ${{ github.event_name == 'pull_request' }}
         run: 'chmod +x scripts/typescript.sh && scripts/typescript.sh build'
       - name: 'Build & publish libraries with changes'
-        if: 'github.event_name == \"pull_request\"'
+        if: ${{ github.event_name == 'push' }}
         run: 'chmod +x scripts/typescript.sh && scripts/typescript.sh publish'

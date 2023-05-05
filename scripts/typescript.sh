@@ -63,7 +63,7 @@ typescript() {
       setup_github_environment
   fi
 
-  CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+  CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
   TYPESCRIPT_LIBRARIES=$(ls -d typescript/)
 
   for LIBRARY in "${TYPESCRIPT_LIBRARIES[@]}"
