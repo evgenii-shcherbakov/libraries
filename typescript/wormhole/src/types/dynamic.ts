@@ -1,11 +1,12 @@
 import { IWormhole } from './interfaces';
+import { StorageTypeNonNullableField } from './utility';
 
 export type DynamicGetters<StorageType extends Object> = {
-  [Getter in keyof StorageType as `get${Capitalize<string & Getter>}`]: () => StorageType[Getter];
+  [Getter in StorageTypeNonNullableField<StorageType> as `get${Capitalize<Getter>}`]: () => StorageType[Getter];
 };
 
 export type DynamicSetters<StorageType extends Object> = {
-  [Setter in keyof StorageType as `set${Capitalize<string & Setter>}`]: (
+  [Setter in StorageTypeNonNullableField<StorageType> as `set${Capitalize<Setter>}`]: (
     value: StorageType[Setter],
   ) => void;
 };

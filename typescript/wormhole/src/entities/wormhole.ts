@@ -1,4 +1,4 @@
-import { StorableRequest } from '../types/utility';
+import { StorableRequest, StorageTypeField } from '../types/utility';
 import { Request } from 'express';
 import { IWormhole } from '../types/interfaces';
 import { CustomWormholeMapper, CustomWormholeSpreadMapper } from '../types/custom';
@@ -23,7 +23,7 @@ export class Wormhole<StorageType extends Object = {}> implements IWormhole<Stor
     throw new Error('Default value for request storage not provided');
   }
 
-  get<Value extends keyof StorageType>(field: Value): StorageType[Value] {
+  get<Field extends StorageTypeField<StorageType>>(field: Field): StorageType[Field] {
     return this.storage[field];
   }
 

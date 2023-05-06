@@ -8,4 +8,23 @@ export type StorableRequest<StorageType extends Object> = Request & {
   storage?: StorageType;
 };
 
-export type StorageTypeField<StorageType extends Object> = keyof StorageType & string;
+type ObjectDefaultFields =
+  | 'constructor'
+  | 'toString'
+  | 'toLocaleString'
+  | 'valueOf'
+  | 'hasOwnProperty';
+
+export type StorageTypeField<StorageType extends Object> = Exclude<
+  keyof StorageType & string,
+  ObjectDefaultFields
+>;
+
+export type OptionalFields<StorageType extends Object> = {
+  [Field in keyof StorageType]-?: {} extends Pick<StorageType, Field> ? Field : never;
+}[keyof StorageType];
+
+export type StorageTypeNonNullableField<StorageType extends Object> = Exclude<
+  Exclude<keyof StorageType & string, OptionalFields<StorageType>>,
+  ObjectDefaultFields
+>;
