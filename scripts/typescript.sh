@@ -72,25 +72,28 @@ typescript() {
   fi
 
   CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
-  TYPESCRIPT_LIBRARIES=$(ls -d typescript/*)
-  TYPESCRIPT_LIBRARIES=("${TYPESCRIPT_LIBRARIES[@]/typescript\//}")
+
+  TYPESCRIPT_LIBRARIES=($(ls -d1 typescript/*))
+  TYPESCRIPT_LIBRARIES=("${TYPESCRIPT_LIBRARIES[@]%/}")
 
   for LIBRARY in "${TYPESCRIPT_LIBRARIES[@]}"
     do
-      if echo "${CHANGED_FILES[@]}" | grep -q "^typescript/$LIBRARY/"
+      LIBRARY_NAME="${LIBRARY/typescript\//}"
+
+      if echo "${CHANGED_FILES[@]}" | grep -q "^typescript/$LIBRARY_NAME/"
         then
-          echo Process "$LIBRARY"...
+          echo Process "$LIBRARY_NAME"...
 
-          scripts/helpers/inject_license.sh "typescript/$LIBRARY/LICENSE"
+          scripts/helpers/inject_license.sh "typescript/$LIBRARY_NAME/LICENSE"
 
-          cd "typescript/$LIBRARY/" || exit 1
-          install_modules "$LIBRARY" || exit 1
-          prebuild "$LIBRARY" || exit 1
-          build "$LIBRARY" || exit 1
+          cd "typescript/$LIBRARY_NAME/" || exit 1
+          install_modules "$LIBRARY_NAME" || exit 1
+          prebuild "$LIBRARY_NAME" || exit 1
+          build "$LIBRARY_NAME" || exit 1
 
           if [[ "$MODE" == "publish" ]]
             then
-              publish "$LIBRARY" || exit 1
+              publish "$LIBRARY_NAME" || exit 1
           fi
 
           cd ../..
