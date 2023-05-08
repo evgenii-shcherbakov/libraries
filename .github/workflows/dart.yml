@@ -1,0 +1,41 @@
+name: 'Dart'
+
+on:
+  push:
+    paths:
+      - 'dart/**'
+    tags:
+      - '*'
+    branches:
+      - 'main'
+  pull_request:
+    paths:
+      - 'dart/**'
+    branches:
+      - 'main'
+
+env:
+  GIT_USERNAME: '${{ secrets.GIT_USERNAME }}'
+  GIT_EMAIL: '${{ secrets.GIT_EMAIL }}'
+
+jobs:
+  Dart:
+    runs-on: 'ubuntu-latest'
+
+    permissions:
+      id-token: 'write'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+        with:
+          fetch-depth: 2
+      - uses: 'dart-lang/setup-dart@v1'
+      - name: 'Get git tag'
+        uses: 'olegtarasov/get-tag@v2.1'
+      - uses: 'dart-lang/setup-dart/.github/workflows/publish.yml@v1'
+      - name: 'Build libraries with changes'
+        if: ${{ github.event_name == 'pull_request' }}
+        run: 'chmod +x scripts/dart.sh && scripts/dart.sh build'
+      - name: 'Build & publish libraries with changes'
+        if: ${{ github.event_name == 'push' }}
+        run: 'chmod +x scripts/dart.sh && scripts/dart.sh publish'
