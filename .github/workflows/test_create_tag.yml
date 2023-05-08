@@ -3,14 +3,14 @@ name: 'Test (create tag)'
 on:
   push:
     branches:
-      - 'main'
+      - 'test/tags'
 
 env:
-  GIT_USERNAME: '${{ secrets.GIT_USERNAME }}'
+  GIT_USERNAME: 'Michail'
   GIT_EMAIL: '${{ secrets.GIT_EMAIL }}'
 
 jobs:
-  Tag:
+  Main:
     runs-on: 'ubuntu-latest'
 
     permissions:
@@ -21,7 +21,12 @@ jobs:
       - uses: 'actions/checkout@v3'
       - name: 'Create tag'
         run: |
-          git config user.name $GIT_USERNAME
-          git config user.email $GIT_EMAIL
-          git tag test-tag
-          git push --tags
+          git config --global user.name ${{ env.GIT_USERNAME }}
+          git config --global user.email ${{ env.GIT_EMAIL }}
+          git tag 0.0.3
+          git push origin 0.0.3
+      - name: 'Trigger Second Workflow'
+        uses: 'peter-evans/repository-dispatch@v1'
+        with:
+          event-type: 'tag-created'
+          client-payload: '{"tag_name": "0.0.3"}'

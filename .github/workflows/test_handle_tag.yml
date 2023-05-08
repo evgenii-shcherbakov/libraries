@@ -1,22 +1,22 @@
 name: 'Test (handle tag)'
 
 on:
-  push:
-    tags:
-      - '*'
-
-env:
-  GIT_USERNAME: '${{ secrets.GIT_USERNAME }}'
-  GIT_EMAIL: '${{ secrets.GIT_EMAIL }}'
+  repository_dispatch:
+    types:
+      - 'tag-created'
 
 jobs:
-  Tag:
+  Main:
     runs-on: 'ubuntu-latest'
 
-    permissions:
-      contents: 'write'
-      id-token: 'write'
-
     steps:
+      - name: 'Extract Tag Name'
+        run: 'echo "Tag Name: ${{ github.event.client_payload.tag_name }}"'
       - name: 'Check tag'
         run: 'Status: ${{ github.ref }}'
+      - name: 'Is tag'
+        if: ${{ github.ref == 'tag' }}
+        run: 'echo True'
+      - name: 'Is push'
+        if: ${{ github.ref == 'push' }}
+        run: 'echo True'
