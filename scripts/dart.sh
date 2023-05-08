@@ -28,7 +28,10 @@ patch_version_from_pubspec() {
   NEW_VERSION="$MAJOR.$MINOR.$PATCH"
 
   # Update the version number in pubspec.yaml
-  sed -i "s/version: $PREV_VERSION/version: $(echo "$NEW_VERSION" | tr -d '"')/g" pubspec.yaml
+  awk \
+      -v old="$OLD_VERSION" \
+      -v new="$NEW_VERSION" \
+      '{ gsub("version: "old, "version: "new) }1' pubspec.yaml > tmp && mv tmp pubspec.yaml
 
   if [[ "$GITHUB_ENV" != "" ]]
     then
@@ -44,7 +47,10 @@ patch_version_from_git_tag() {
   NEW_VERSION=$(echo "$GIT_TAG_NAME" | sed -e "s/^$1-//")
 
   # Update the version number in pubspec.yaml
-  sed -i "s/version: $PREV_VERSION/version: $NEW_VERSION/g" pubspec.yaml
+  awk \
+    -v old="$OLD_VERSION" \
+    -v new="$NEW_VERSION" \
+    '{ gsub("version: "old, "version: "new) }1' pubspec.yaml > tmp && mv tmp pubspec.yaml
 }
 
 setup_github_environment() {
@@ -79,16 +85,16 @@ publish() {
       patch_version_from_pubspec
   fi
 
-  echo Update main branch...
-  git add .
-  git commit -m "Update $LIBRARY_NAME version"
-  git push
-
-  if [[ "$GITHUB_ENV" != "" && "$GIT_TAG_NAME" == "" ]]
-    then
-      git tag "${LIBRARY_NAME}-$LIBRARY_VERSION"
-      git push --tags
-  fi
+#  echo Update main branch...
+#  git add .
+#  git commit -m "Update $LIBRARY_NAME version"
+#  git push
+#
+#  if [[ "$GITHUB_ENV" != "" && "$GIT_TAG_NAME" == "" ]]
+#    then
+#      git tag "${LIBRARY_NAME}-$LIBRARY_VERSION"
+#      git push --tags
+#  fi
 
   echo Publish "$1"...
   dart pub publish
