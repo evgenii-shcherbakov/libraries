@@ -81,3 +81,11 @@ Requirements:
 ```shell
 act --secret-file .env
 ```
+
+### Bootstrap new dart library
+
+```shell
+chmod +x scripts/new.sh
+scripts/new.sh --dart $LIBRARY_NAME
+cd dart/$LIBRARY_NAME
+```
