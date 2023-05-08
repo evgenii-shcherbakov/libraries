@@ -54,3 +54,30 @@ chmod +x scripts/new.sh
 scripts/new.sh --typescript $LIBRARY_NAME
 cd typescript/$LIBRARY_NAME
 ```
+
+### Link and use typescript library in other packages
+
+Go to library folder, then:
+
+```shell
+npm run mount
+```
+
+After that go to package, where linked library need and:
+
+```shell
+npm link $LIBRARY_NAME
+```
+
+Now you can use linked library
+
+### Test GitHub Actions workflow
+
+Requirements:
+- Docker
+- Act utility
+- .env file with repository secrets
+
+```shell
+act --secret-file .env
+```
