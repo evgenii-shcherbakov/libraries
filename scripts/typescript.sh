@@ -60,7 +60,7 @@ publish() {
   echo Successfull publication of "$1"
 }
 
-typescript() {
+main() {
   local CHANGED_FILES
   local TYPESCRIPT_LIBRARIES
 
@@ -105,4 +105,4 @@ typescript() {
     echo Job finished!
 }
 
-typescript
+main

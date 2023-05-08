@@ -53,7 +53,7 @@ setup_github_environment() {
   git config user.email "$GIT_EMAIL"
 }
 
-install_modules() {
+install_dependencies() {
   echo Install "$1" dependencies...
   dart pub get
 }
@@ -96,7 +96,7 @@ publish() {
   echo Successfull publication of "$1"
 }
 
-dart() {
+main() {
   local CHANGED_FILES
   local DART_LIBRARIES
 
@@ -123,7 +123,7 @@ dart() {
           scripts/helpers/inject_license.sh "dart/$LIBRARY_NAME/LICENSE"
 
           cd "dart/$LIBRARY_NAME/" || exit 1
-          install_modules "$LIBRARY_NAME" || exit 1
+          install_dependencies "$LIBRARY_NAME" || exit 1
           prebuild "$LIBRARY_NAME" || exit 1
 
           if [[ "$MODE" == "publish" ]]
@@ -138,4 +138,4 @@ dart() {
     echo Job finished!
 }
 
-dart
+main

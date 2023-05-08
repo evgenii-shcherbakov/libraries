@@ -32,7 +32,6 @@ jobs:
       - uses: 'dart-lang/setup-dart@v1'
       - name: 'Get git tag'
         uses: 'olegtarasov/get-tag@v2.1'
-      - uses: 'dart-lang/setup-dart/.github/workflows/publish.yml@v1'
       - name: 'Build libraries with changes'
         if: ${{ github.event_name == 'pull_request' }}
         run: 'chmod +x scripts/dart.sh && scripts/dart.sh build'
