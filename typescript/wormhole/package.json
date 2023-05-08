@@ -1,6 +1,6 @@
 {
   "name": "@iipekolict/wormhole",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library for handle backend state between middlewares in Express / Express-based frameworks",
   "repository": {
     "type": "git",
@@ -17,6 +17,13 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    "./*": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./dist/*": null
+  },
   "scripts": {
     "format": "prettier --write src",
     "build": "rm -rf dist && tsc",

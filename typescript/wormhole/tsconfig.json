@@ -5,6 +5,7 @@
     "lib": ["es2021", "es6"],
     "moduleResolution": "Node",
     "declaration": true,
+    "declarationDir": "dist",
     "outDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
