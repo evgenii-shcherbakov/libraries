@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - 'test/tags'
+      - 'main'
 
 env:
   GIT_USERNAME: 'Michail'
   GIT_EMAIL: '${{ secrets.GIT_EMAIL }}'
+  TAG: 'rx_state_dart-1.0.1'
 
 jobs:
   Main:
@@ -23,10 +25,11 @@ jobs:
         run: |
           git config --global user.name ${{ env.GIT_USERNAME }}
           git config --global user.email ${{ env.GIT_EMAIL }}
-          git tag 0.0.3
-          git push origin 0.0.3
+          git tag ${{ env.TAG }}
+          git push origin ${{ env.TAG }}
       - name: 'Trigger Second Workflow'
         uses: 'peter-evans/repository-dispatch@v1'
         with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
           event-type: 'tag-created'
-          client-payload: '{"tag_name": "0.0.3"}'
+          client-payload: '{"tag": "${{ env.TAG }}"}'
