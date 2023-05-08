@@ -53,6 +53,8 @@ publish() {
   fi
 
   echo Update main branch...
+  git add .
+  git commit -m "Update $LIBRARY_NAME version"
   git push
 
   echo Successfull publication of "$1"
