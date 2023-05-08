@@ -1,0 +1,22 @@
+name: 'Test (handle tag)'
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  GIT_USERNAME: '${{ secrets.GIT_USERNAME }}'
+  GIT_EMAIL: '${{ secrets.GIT_EMAIL }}'
+
+jobs:
+  Tag:
+    runs-on: 'ubuntu-latest'
+
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
+    steps:
+      - name: 'Check tag'
+        run: 'Status: ${{ github.ref }}'
