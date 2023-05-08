@@ -1,4 +1,4 @@
-RX-based state manager in Dart. Inspired by RxJS
+RX-based state manager in Dart. Inspired by RxJS.
 
 ## Features
 

@@ -71,6 +71,11 @@ prebuild() {
   dart doc
 }
 
+build() {
+  echo Prepare "$1" package...
+  dart pub publish --dry-run
+}
+
 publish() {
   echo Patch version for "$1"...
 
@@ -93,7 +98,7 @@ publish() {
   fi
 
   echo Publish "$1"...
-  dart pub publish
+  dart pub publish -f
 
   echo Successfull publication of "$1"
 }
@@ -110,6 +115,7 @@ force_publish() {
   cd "dart/$LIBRARY_NAME/" || exit 1
   install_dependencies "$LIBRARY_NAME" || exit 1
   prebuild "$LIBRARY_NAME" || exit 1
+  build "$LIBRARY_NAME" || exit 1
   publish "$LIBRARY_NAME" || exit 1
 }
 
@@ -140,6 +146,7 @@ main() {
           cd "dart/$LIBRARY_NAME/" || exit 1
           install_dependencies "$LIBRARY_NAME" || exit 1
           prebuild "$LIBRARY_NAME" || exit 1
+          build "$LIBRARY_NAME" || exit 1
 
           if [[ "$MODE" == "publish" ]]
             then
