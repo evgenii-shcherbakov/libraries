@@ -98,11 +98,24 @@ publish() {
   echo Successfull publication of "$1"
 }
 
+force_publish() {
+  local LIBRARY_NAME
+
+  LIBRARY_NAME="$(echo "$GIT_TAG_NAME" | sed -e "s/-[0-9]*.[0-9]*.[0-9]*$//")"
+
+  echo Process "$LIBRARY_NAME"...
+
+  scripts/helpers/inject_license.sh "dart/$LIBRARY_NAME/LICENSE"
+
+  cd "dart/$LIBRARY_NAME/" || exit 1
+  install_dependencies "$LIBRARY_NAME" || exit 1
+  prebuild "$LIBRARY_NAME" || exit 1
+  publish "$LIBRARY_NAME" || exit 1
+}
+
 main() {
   local CHANGED_FILES
   local DART_LIBRARIES
-
-  chmod +x scripts/helpers/inject_license.sh
 
   if [[ "$GITHUB_ENV" != "" ]]
     then
@@ -140,4 +153,11 @@ main() {
     echo Job finished!
 }
 
-main
+chmod +x scripts/helpers/inject_license.sh
+
+if [[ "$GIT_TAG_NAME" != "" && "$GITHUB_ENV" != "" ]]
+  then
+    force_publish
+  else
+    main
+fi
