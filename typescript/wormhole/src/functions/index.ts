@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Wormhole } from '../entities/wormhole';
+import { StaticWormhole } from '../entities/static-wormhole';
 import { DynamicWormholeClass } from '../types/classes';
 import { StorageTypeField } from '../types/utility';
 
@@ -35,7 +35,7 @@ const dynamicSetterFactory = <
 };
 
 const storageFieldsHandlerFactory = <StorageType extends Object>(
-  wormhole: Wormhole<StorageType>,
+  wormhole: StaticWormhole<StorageType>,
 ) => {
   return (field: StorageTypeField<StorageType>) => {
     const symbols: string[] = field.split('');
@@ -62,9 +62,9 @@ const storageFieldsHandlerFactory = <StorageType extends Object>(
 export const createDynamicWormhole = <StorageType extends Object>(
   defaultValue: StorageType,
 ): DynamicWormholeClass<StorageType> => {
-  Wormhole['defaultValue'] = defaultValue;
+  StaticWormhole['defaultValue'] = defaultValue;
 
-  return class extends Wormhole<StorageType> {
+  return class extends StaticWormhole<StorageType> {
     constructor(request: Request) {
       super(request);
 

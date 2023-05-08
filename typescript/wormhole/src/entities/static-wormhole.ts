@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { IWormhole } from '../types/interfaces';
 import { CustomWormholeMapper, CustomWormholeSpreadMapper } from '../types/custom';
 
-export class Wormhole<StorageType extends Object = {}> implements IWormhole<StorageType> {
+export class StaticWormhole<StorageType extends Object = {}> implements IWormhole<StorageType> {
   protected readonly storableRequest: StorableRequest<StorageType>;
   protected static defaultValue: object | undefined;
 
@@ -16,8 +16,8 @@ export class Wormhole<StorageType extends Object = {}> implements IWormhole<Stor
       return this.storableRequest.storage;
     }
 
-    if (Wormhole.defaultValue) {
-      return Wormhole.defaultValue as StorageType;
+    if (StaticWormhole.defaultValue) {
+      return StaticWormhole.defaultValue as StorageType;
     }
 
     throw new Error('Default value for request storage not provided');

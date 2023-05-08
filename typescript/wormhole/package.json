@@ -17,13 +17,6 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    "./*": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    },
-    "./dist/*": null
-  },
   "scripts": {
     "format": "prettier --write src",
     "build": "rm -rf dist && tsc",
