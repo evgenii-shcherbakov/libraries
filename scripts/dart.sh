@@ -29,9 +29,9 @@ patch_version_from_pubspec() {
 
   # Update the version number in pubspec.yaml
   awk \
-      -v old="$OLD_VERSION" \
-      -v new="$NEW_VERSION" \
-      '{ gsub("version: "old, "version: "new) }1' pubspec.yaml > tmp && mv tmp pubspec.yaml
+    -v old="$PREV_VERSION" \
+    -v new="$NEW_VERSION" \
+    '{ gsub("version: "old, "version: "new) }1' pubspec.yaml > tmp && mv tmp pubspec.yaml
 
   if [[ "$GITHUB_ENV" != "" ]]
     then
@@ -48,7 +48,7 @@ patch_version_from_git_tag() {
 
   # Update the version number in pubspec.yaml
   awk \
-    -v old="$OLD_VERSION" \
+    -v old="$PREV_VERSION" \
     -v new="$NEW_VERSION" \
     '{ gsub("version: "old, "version: "new) }1' pubspec.yaml > tmp && mv tmp pubspec.yaml
 }
