@@ -1,0 +1,37 @@
+name: 'Test (publish Dart libraries)'
+
+on:
+  push:
+    branches:
+      - 'test/dart-publish'
+
+jobs:
+  Main:
+    runs-on: 'ubuntu-latest'
+
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+      - uses: 'dart-lang/setup-dart@v1'
+      - name: 'Install dependencies'
+        run: 'dart pub global activate pubspec_version && cd dart/rx_state_dart && dart pub get'
+      - name: 'Bump version number'
+        id: 'bump_version'
+        run: |
+          cd dart/rx_state_dart
+          PACKAGE_VERSION=$(pubver bump patch)
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+      - name: 'Build package'
+        run: 'cd dart/rx_state_dart && dart pub publish -f'
+      - name: 'Tag repository'
+        run: |
+          cd dart/rx_state_dart
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Bump rx_state_dart version to ${{ env.PACKAGE_VERSION }}" pubspec.yaml
+          git push origin HEAD:main
+          git tag -a rx_state_dart-${{ env.PACKAGE_VERSION }} -m "rx_state_dart version ${{ env.PACKAGE_VERSION }}"
+          git push origin rx_state_dart-${{ env.PACKAGE_VERSION }}
