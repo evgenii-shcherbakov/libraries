@@ -3,7 +3,9 @@
 MODE="$1" # required parameter (publish | build)
 GIT_USERNAME=${GIT_USERNAME:-$2}
 GIT_EMAIL=${GIT_EMAIL:-$3}
-GIT_TAG_NAME=${GIT_TAG_NAME:-$4}
+
+KEYSTORE_HOST=${KEYSTORE_HOST:-$4}
+KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$5}
 
 update_pubspec_version() {
   awk \
@@ -12,7 +14,7 @@ update_pubspec_version() {
     '{ gsub("version: "old, "version: "new) }1' pubspec.yaml > tmp && mv tmp pubspec.yaml
 }
 
-patch_version_from_pubspec() {
+patch_version() {
   local PREV_VERSION
   local NEW_VERSION
   local MAJOR
@@ -37,16 +39,6 @@ patch_version_from_pubspec() {
     then
       echo "LIBRARY_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
   fi
-}
-
-patch_version_from_git_tag() {
-  local PREV_VERSION
-  local NEW_VERSION
-
-  PREV_VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')
-  NEW_VERSION=$(echo "$GIT_TAG_NAME" | sed -e "s/^$1-//")
-
-  update_pubspec_version "$PREV_VERSION" "$NEW_VERSION"
 }
 
 setup_github_environment() {
@@ -78,45 +70,23 @@ build() {
 
 publish() {
   echo Patch version for "$1"...
-
-  if [[ "$GIT_TAG_NAME" != "" ]]
-    then
-      patch_version_from_git_tag "$1"
-    else
-      patch_version_from_pubspec
-  fi
+  patch_version
 
   echo Update main branch...
   git add .
   git commit -m "Update $LIBRARY_NAME version"
   git push
 
-  if [[ "$GITHUB_ENV" != "" && "$GIT_TAG_NAME" == "" ]]
-    then
-      git tag "${LIBRARY_NAME}-$LIBRARY_VERSION"
-      git push --tags
-  fi
+  echo Inject google temporary token...
+  curl \
+    -X GET \
+    -H "Authorization: Bearer $KEYSTORE_ACCESS_TOKEN" \
+    --url "$KEYSTORE_HOST/google/temporary-token/pub-dev" | dart pub token add https://pub.dev
 
   echo Publish "$1"...
-  dart pub publish -f
+  dart pub publish --force
 
   echo Successfull publication of "$1"
-}
-
-force_publish() {
-  local LIBRARY_NAME
-
-  LIBRARY_NAME="$(echo "$GIT_TAG_NAME" | sed -e "s/-[0-9]*.[0-9]*.[0-9]*$//")"
-
-  echo Process "$LIBRARY_NAME"...
-
-  scripts/helpers/inject_license.sh "dart/$LIBRARY_NAME/LICENSE"
-
-  cd "dart/$LIBRARY_NAME/" || exit 1
-  install_dependencies "$LIBRARY_NAME" || exit 1
-  prebuild "$LIBRARY_NAME" || exit 1
-  build "$LIBRARY_NAME" || exit 1
-  publish "$LIBRARY_NAME" || exit 1
 }
 
 main() {
@@ -127,6 +97,8 @@ main() {
     then
       setup_github_environment
   fi
+
+  chmod +x scripts/helpers/inject_license.sh
 
   CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
 
@@ -160,11 +132,4 @@ main() {
     echo Job finished!
 }
 
-chmod +x scripts/helpers/inject_license.sh
-
-if [[ "$GIT_TAG_NAME" != "" && "$GITHUB_ENV" != "" ]]
-  then
-    force_publish
-  else
-    main
-fi
+main

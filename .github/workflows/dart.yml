@@ -17,6 +17,8 @@ on:
 env:
   GIT_USERNAME: '${{ secrets.GIT_USERNAME }}'
   GIT_EMAIL: '${{ secrets.GIT_EMAIL }}'
+  KEYSTORE_HOST: '${{ secrets.KEYSTORE_HOST }}'
+  KEYSTORE_ACCESS_TOKEN: '${{ secrets.KEYSTORE_ACCESS_TOKEN }}'
 
 jobs:
   Dart:
@@ -31,8 +33,6 @@ jobs:
         with:
           fetch-depth: 2
       - uses: 'dart-lang/setup-dart@v1'
-      - name: 'Get git tag'
-        uses: 'olegtarasov/get-tag@v2.1'
       - name: 'Build libraries with changes'
         if: ${{ github.event_name == 'pull_request' }}
         run: 'chmod +x scripts/dart.sh && scripts/dart.sh build'
