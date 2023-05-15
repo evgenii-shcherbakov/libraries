@@ -5,7 +5,7 @@ Repository for my libraries
 
 - `GIT_USERNAME`
 - `GIT_EMAIL`
-- `KEYSTORE_GIT_REPOSITORY`
+- `KEYSTORE_HOST`
 - `KEYSTORE_ACCESS_TOKEN`
 
 ### Requirements
@@ -14,16 +14,6 @@ Platform:
 
 - Node 18
 - Dart 2.4+
-
-Keystore folder structure:
-
-- global
-  - npm
-    - token.txt `file with npm access token`
-
-[//]: # (- libraries)
-
-[//]: # (  - .env ``)
 
 ### Bootstrap project
 
@@ -76,10 +66,10 @@ Now you can use linked library
 Requirements:
 - Docker
 - Act utility
-- .env file with repository secrets
+- secrets.env file with repository secrets
 
 ```shell
-act --secret-file .env
+act --secret-file secrets.env
 ```
 
 ### Bootstrap new dart library
