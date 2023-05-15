@@ -79,9 +79,10 @@ publish() {
 
   echo Inject google temporary token...
   curl \
-    -X GET \
+    -X POST \
     -H "Authorization: Bearer $KEYSTORE_ACCESS_TOKEN" \
-    --url "$KEYSTORE_HOST/google/temporary-token/pub-dev" | dart pub token add https://pub.dev
+    -d "{\"url\":\"https://pub.dev\",\"account\":\"pub-dev\"}" \
+    --url "$KEYSTORE_HOST/google/temporary-token" | dart pub token add https://pub.dev
 
   echo Publish "$1"...
   dart pub publish --force
