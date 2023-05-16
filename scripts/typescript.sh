@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
 MODE="$1" # required parameter (publish | build)
-GIT_USERNAME=${GIT_USERNAME:-$2}
-GIT_EMAIL=${GIT_EMAIL:-$3}
-NPM_AUTH_TOKEN=${NPM_AUTH_TOKEN:-$(cat keystore/global/npm/token.txt || echo "$4")}
+KEYSTORE_HOST=${KEYSTORE_HOST:-$2}
+KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$3}
+
+NPM_AUTH_TOKEN=""
 
 setup_github_environment() {
   echo Setup git...
-  git config user.name "$GIT_USERNAME"
-  git config user.email "$GIT_EMAIL"
+  git config user.name "GitHub Action"
+  git config user.email "action@github.com"
 
   echo Update npm...
   npm install npm@latest -g
@@ -77,6 +78,13 @@ main() {
 
   TYPESCRIPT_LIBRARIES=($(ls -d1 typescript/*))
   TYPESCRIPT_LIBRARIES=("${TYPESCRIPT_LIBRARIES[@]%/}")
+
+  NPM_AUTH_TOKEN=$(
+    curl \
+      -X GET \
+      -H "Authorization: Bearer $KEYSTORE_ACCESS_TOKEN" \
+      --url "$KEYSTORE_HOST/applications/libraries/npm/access-token"
+  )
 
   for LIBRARY in "${TYPESCRIPT_LIBRARIES[@]}"
     do

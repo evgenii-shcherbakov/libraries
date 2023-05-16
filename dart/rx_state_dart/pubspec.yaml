@@ -1,11 +1,11 @@
 name: rx_state_dart
+version: 1.0.1
 description: RX-based Dart state-manager library
-version: 1.0.0
 repository: https://github.com/IIPEKOLICT/rx-state-dart
 
-environment:
+environment: 
   sdk: '>=2.19.4 <3.0.0'
 
-dev_dependencies:
+dev_dependencies: 
   lints: ^2.0.0
   test: ^1.21.0

@@ -1,12 +1,14 @@
 # libraries
 Repository for my libraries
 
+---
+
 ### Repository secrets
 
-- `GIT_USERNAME`
-- `GIT_EMAIL`
-- `KEYSTORE_GIT_REPOSITORY`
+- `KEYSTORE_HOST`
 - `KEYSTORE_ACCESS_TOKEN`
+
+---
 
 ### Requirements
 
@@ -15,15 +17,7 @@ Platform:
 - Node 18
 - Dart 2.4+
 
-Keystore folder structure:
-
-- global
-  - npm
-    - token.txt `file with npm access token`
-
-[//]: # (- libraries)
-
-[//]: # (  - .env ``)
+---
 
 ### Bootstrap project
 
@@ -33,21 +27,11 @@ cd libraries
 npm i
 ```
 
-### Build all changed typescript libs
+---
 
-```shell
-chmod +x scripts/typescript.sh
-scripts/typescript.sh build
-```
+### TypeScript
 
-### Build and publish all changed typescript libs
-
-```shell
-chmod +x scripts/typescript.sh
-scripts/typescript.sh publish
-```
-
-### Bootstrap new typescript library
+##### Bootstrap new typescript library
 
 ```shell
 chmod +x scripts/new.sh
@@ -55,7 +39,7 @@ scripts/new.sh --typescript $LIBRARY_NAME
 cd typescript/$LIBRARY_NAME
 ```
 
-### Link and use typescript library in other packages
+##### Link and use typescript library in other packages
 
 Go to library folder, then:
 
@@ -71,21 +55,55 @@ npm link $LIBRARY_NAME
 
 Now you can use linked library
 
+##### Build all changed typescript libs
+
+```shell
+chmod +x scripts/typescript.sh
+scripts/typescript.sh build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+```
+
+##### Build and publish all changed typescript libs
+
+```shell
+chmod +x scripts/typescript.sh
+scripts/typescript.sh publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+```
+
+---
+
+### Dart
+
+##### Bootstrap new dart library
+
+```shell
+chmod +x scripts/helpers/new.sh
+scripts/helpers/new.sh --dart $LIBRARY_NAME
+cd dart/$LIBRARY_NAME
+```
+
+##### Build all changed dart libs
+
+```shell
+chmod +x scripts/dart.sh
+scripts/dart.sh build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+```
+
+##### Build and publish all changed dart libs
+
+```shell
+chmod +x scripts/dart.sh
+scripts/dart.sh publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+```
+
+---
+
 ### Test GitHub Actions workflow
 
 Requirements:
 - Docker
 - Act utility
-- .env file with repository secrets
+- secrets.env file with repository secrets
 
 ```shell
-act --secret-file .env
-```
-
-### Bootstrap new dart library
-
-```shell
-chmod +x scripts/new.sh
-scripts/new.sh --dart $LIBRARY_NAME
-cd dart/$LIBRARY_NAME
+act --secret-file secrets.env
 ```
