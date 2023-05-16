@@ -1,3 +1,4 @@
 export { Coroutine } from './coroutine';
-export { delay } from './functions';
+export { DelayedCoroutine } from './delayed-coroutine';
+export { delay, defaultPromise } from './functions';
 export { TAsyncMapCallback } from './types';
