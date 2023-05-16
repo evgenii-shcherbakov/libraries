@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
 MODE="$1" # required parameter (publish | build)
-GIT_USERNAME=${GIT_USERNAME:-$2}
-GIT_EMAIL=${GIT_EMAIL:-$3}
-
-KEYSTORE_HOST=${KEYSTORE_HOST:-$4}
-KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$5}
+KEYSTORE_HOST=${KEYSTORE_HOST:-$2}
+KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$3}
 
 update_pubspec_version() {
   awk \
@@ -43,8 +40,8 @@ patch_version() {
 
 setup_github_environment() {
   echo Setup git...
-  git config user.name "$GIT_USERNAME"
-  git config user.email "$GIT_EMAIL"
+  git config user.name "GitHub Action"
+  git config user.email "action@github.com"
 }
 
 install_dependencies() {
@@ -72,10 +69,10 @@ publish() {
   echo Patch version for "$1"...
   patch_version
 
-  echo Update main branch...
-  git add .
-  git commit -m "Update $LIBRARY_NAME version"
-  git push
+#  echo Update main branch...
+#  git add .
+#  git commit -m "Update $LIBRARY_NAME version"
+#  git push
 
   echo Inject google temporary token...
   curl \

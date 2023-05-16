@@ -1,18 +1,15 @@
 #!/usr/bin/env bash
 
 MODE="$1" # required parameter (publish | build)
-GIT_USERNAME=${GIT_USERNAME:-$2}
-GIT_EMAIL=${GIT_EMAIL:-$3}
-
-KEYSTORE_HOST=${KEYSTORE_HOST:-$4}
-KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$5}
+KEYSTORE_HOST=${KEYSTORE_HOST:-$2}
+KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$3}
 
 NPM_AUTH_TOKEN=""
 
 setup_github_environment() {
   echo Setup git...
-  git config user.name "$GIT_USERNAME"
-  git config user.email "$GIT_EMAIL"
+  git config user.name "GitHub Action"
+  git config user.email "action@github.com"
 
   echo Update npm...
   npm install npm@latest -g
@@ -56,10 +53,10 @@ publish() {
       NODE_AUTH_TOKEN="$NPM_AUTH_TOKEN" npm publish --access public --provenance
   fi
 
-  echo Update main branch...
-  git add .
-  git commit -m "Update $LIBRARY_NAME version"
-  git push
+#  echo Update main branch...
+#  git add .
+#  git commit -m "Update $LIBRARY_NAME version"
+#  git push
 
   echo Successfull publication of "$1"
 }
