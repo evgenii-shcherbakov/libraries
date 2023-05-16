@@ -53,10 +53,10 @@ publish() {
       NODE_AUTH_TOKEN="$NPM_AUTH_TOKEN" npm publish --access public --provenance
   fi
 
-#  echo Update main branch...
-#  git add .
-#  git commit -m "Update $LIBRARY_NAME version"
-#  git push
+  echo Update main branch...
+  git add .
+  git commit -m "Update $LIBRARY_NAME version"
+  git push
 
   echo Successfull publication of "$1"
 }
