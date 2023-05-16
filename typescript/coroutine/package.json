@@ -1,6 +1,6 @@
 {
   "name": "@iipekolict/coroutine",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "Typescript library for use multithreading",
   "repository": {
     "type": "git",
