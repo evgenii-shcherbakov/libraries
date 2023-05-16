@@ -1,6 +1,6 @@
 {
   "name": "@iipekolict/wormhole",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Library for handle backend state between middlewares in Express / Express-based frameworks",
   "repository": {
     "type": "git",
