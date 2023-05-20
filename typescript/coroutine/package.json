@@ -1,5 +1,5 @@
 {
-  "name": "@iipekolict/coroutine",
+  "name": "@evgenii-shcherbakov/coroutine",
   "version": "1.0.28",
   "description": "Typescript library for use multithreading",
   "repository": {

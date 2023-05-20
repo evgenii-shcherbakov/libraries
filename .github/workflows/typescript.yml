@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
-          scope: '@iipekolict'
+          scope: '@evgenii-shcherbakov'
           always-auth: 'true'
       - name: 'Build libraries with changes'
         if: ${{ github.event_name == 'pull_request' }}
