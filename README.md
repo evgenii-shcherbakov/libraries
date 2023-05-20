@@ -1,6 +1,8 @@
 # libraries
 Repository for my libraries
 
+[Published npm packages](https://www.npmjs.com/search?q=%40evgenii-shcherbakov)
+
 ---
 
 ### Repository secrets
