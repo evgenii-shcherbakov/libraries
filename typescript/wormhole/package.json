@@ -1,6 +1,6 @@
 {
   "name": "@evgenii-shcherbakov/wormhole",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Library for handle backend state between middlewares in Express / Express-based frameworks",
   "repository": {
     "type": "git",
