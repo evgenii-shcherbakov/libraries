@@ -4,13 +4,13 @@
   "description": "Library for handle backend state between middlewares in Express / Express-based frameworks",
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com/IIPEKOLICT/libraries.git",
+    "url": "ssh://git@github.com/evgenii-shcherbakov/libraries.git",
     "directory": "typescript/wormhole"
   },
   "bugs": {
-    "url": "https://github.com/IIPEKOLICT/libraries/issues"
+    "url": "https://github.com/evgenii-shcherbakov/libraries/issues"
   },
-  "homepage": "https://github.com/IIPEKOLICT/libraries/tree/main/typescript/wormhole/README.md",
+  "homepage": "https://github.com/evgenii-shcherbakov/libraries/tree/main/typescript/wormhole/README.md",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"

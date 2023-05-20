@@ -1,7 +1,7 @@
 name: library
 description: library description
 version: 1.0.0
-repository: https://github.com/IIPEKOLICT/libraries/tree/main/dart/library
+repository: https://github.com/evgenii-shcherbakov/libraries/tree/main/dart/library
 
 environment:
   sdk: '>=2.19.4 <3.0.0'
