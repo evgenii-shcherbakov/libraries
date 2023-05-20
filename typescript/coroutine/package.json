@@ -1,6 +1,6 @@
 {
   "name": "@evgenii-shcherbakov/coroutine",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "Typescript library for use multithreading",
   "repository": {
     "type": "git",
