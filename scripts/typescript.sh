@@ -7,9 +7,7 @@ KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$3}
 NPM_AUTH_TOKEN=""
 
 setup_github_environment() {
-  echo Setup git...
-  git config user.name "GitHub Action"
-  git config user.email "action@github.com"
+  scripts/github/setup_git.sh
 
   echo Update npm...
   npm install npm@latest -g
@@ -53,10 +51,7 @@ publish() {
       NODE_AUTH_TOKEN="$NPM_AUTH_TOKEN" npm publish --access public --provenance
   fi
 
-  echo Update main branch...
-  git add .
-  git commit -m "Update $LIBRARY_NAME version"
-  git push
+  scripts/github/update_git_branch.sh "$1"
 
   echo Successfull publication of "$1"
 }
@@ -66,6 +61,8 @@ main() {
   local TYPESCRIPT_LIBRARIES
 
   chmod +x scripts/helpers/inject_license.sh
+  chmod +x scripts/github/setup_git.sh
+  chmod +x scripts/github/update_git_branch.sh
 
   if [ -z "$GITHUB_ENV" ]
     then

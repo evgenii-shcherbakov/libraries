@@ -38,12 +38,6 @@ patch_version() {
   fi
 }
 
-setup_github_environment() {
-  echo Setup git...
-  git config user.name "GitHub Action"
-  git config user.email "action@github.com"
-}
-
 install_dependencies() {
   echo Install "$1" dependencies...
   dart pub get
@@ -69,10 +63,7 @@ publish() {
   echo Patch version for "$1"...
   patch_version
 
-  echo Update main branch...
-  git add .
-  git commit -m "Update $LIBRARY_NAME version"
-  git push
+  scripts/github/update_git_branch.sh "$1"
 
   echo Inject google temporary token...
   curl \
@@ -91,12 +82,14 @@ main() {
   local CHANGED_FILES
   local DART_LIBRARIES
 
+  chmod +x scripts/helpers/inject_license.sh
+  chmod +x scripts/github/setup_git.sh
+  chmod +x scripts/github/update_git_branch.sh
+
   if [[ "$GITHUB_ENV" != "" ]]
     then
-      setup_github_environment
+      scripts/github/setup_git.sh
   fi
-
-  chmod +x scripts/helpers/inject_license.sh
 
   CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
 

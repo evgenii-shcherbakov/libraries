@@ -14,12 +14,6 @@ KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$3}
 #GPG_KEY_ID=""
 #GPG_KEY=""
 
-setup_github_environment() {
-  echo Setup git...
-  git config user.name "GitHub Action"
-  git config user.email "action@github.com"
-}
-
 #get_env_declaration() {
 #  local CREDENTIALS
 #
@@ -76,14 +70,12 @@ build() {
 publish() {
   echo Patch version for "$1"...
 #  npm version patch
+# TODO: implement version patching later
 
   echo Publish "$1"...
   $(echo "$2" | tr -d '"') ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
 
-  echo Update main branch...
-  git add .
-  git commit -m "Update $1 version"
-  git push
+  scripts/github/update_git_branch.sh "$1"
 
   echo Successfull publication of "$1"
 }
@@ -94,10 +86,12 @@ main() {
   local PUBLISH_ENV_DECLARATION
 
   chmod +x scripts/helpers/inject_license.sh
+  chmod +x scripts/github/setup_git.sh
+  chmod +x scripts/github/update_git_branch.sh
 
   if [[ "$GITHUB_ENV" != "" ]]
     then
-      setup_github_environment
+      scripts/github/setup_git.sh
   fi
 
   CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
@@ -107,9 +101,10 @@ main() {
 
   PUBLISH_ENV_DECLARATION=$(
     curl \
-      -X GET \
+      -X POST \
       -H "Authorization: Bearer $KEYSTORE_ACCESS_TOKEN" \
-      --url "$KEYSTORE_HOST/applications/libraries/maven-central/credentials"
+      -d "{\"format\":\"maven-env-string\"}" \
+      --url "$KEYSTORE_HOST/applications/libraries/publishing/maven-central"
   )
 
   for LIBRARY in "${KOTLIN_LIBRARIES[@]}"
