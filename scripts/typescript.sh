@@ -83,7 +83,7 @@ main() {
     curl \
       -X GET \
       -H "Authorization: Bearer $KEYSTORE_ACCESS_TOKEN" \
-      --url "$KEYSTORE_HOST/applications/libraries/npm/access-token"
+      --url "$KEYSTORE_HOST/applications/libraries/publishing/npm/access-token"
   )
 
   for LIBRARY in "${TYPESCRIPT_LIBRARIES[@]}"
