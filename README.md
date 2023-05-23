@@ -1,14 +1,16 @@
 # libraries
 Repository for my libraries
 
-[Published npm packages](https://www.npmjs.com/search?q=%40evgenii-shcherbakov)
+- [x] [Published npm packages](https://www.npmjs.com/search?q=%40evgenii-shcherbakov)
+- [x] [Published pub.dev packages](https://pub.dev/packages?q=publisher%3Aiipekolict.infinityfreeapp.com)
+- [x] [Published Maven Central packages](https://central.sonatype.com/search?smo=true&q=io.github.evgenii-shcherbakov)
 
 ---
 
 ### Repository secrets
 
-- `KEYSTORE_HOST`
-- `KEYSTORE_ACCESS_TOKEN`
+- `KEYSTORE_HOST` keystore project API url
+- `KEYSTORE_ACCESS_TOKEN` keystore API JWT access token
 
 ---
 
@@ -17,7 +19,8 @@ Repository for my libraries
 Platform:
 
 - Node 18
-- Dart 2.4+
+- Dart 3
+- Java 19
 
 ---
 
@@ -95,6 +98,32 @@ scripts/dart.sh build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
 ```shell
 chmod +x scripts/dart.sh
 scripts/dart.sh publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+```
+
+---
+
+### Kotlin
+
+##### Bootstrap new kotlin library
+
+```shell
+chmod +x scripts/helpers/new.sh
+scripts/helpers/new.sh --kotlin $LIBRARY_NAME
+cd kotlin/$LIBRARY_NAME
+```
+
+##### Build all changed kotlin libs
+
+```shell
+chmod +x scripts/kotlin.sh
+scripts/kotlin.sh build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+```
+
+##### Build and publish all changed kotlin libs
+
+```shell
+chmod +x scripts/kotlin.sh
+scripts/kotlin.sh publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
 ```
 
 ---
