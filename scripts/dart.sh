@@ -4,76 +4,58 @@ MODE="$1" # required parameter (publish | build)
 KEYSTORE_HOST=${KEYSTORE_HOST:-$2}
 KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$3}
 
-update_pubspec_version() {
-  awk \
-    -v old="$1" \
-    -v new="$2" \
-    '{ gsub("version: "old, "version: "new) }1' pubspec.yaml > tmp && mv tmp pubspec.yaml
-}
+chmod +x scripts/helpers/inject_license.sh
+chmod +x scripts/github/setup_git.sh
+chmod +x scripts/github/update_git_branch.sh
+chmod +x scripts/versioning/patch_version.sh
 
-patch_version() {
-  local PREV_VERSION
-  local NEW_VERSION
-  local MAJOR
-  local MINOR
-  local PATCH
-
-  PREV_VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')
-
-  # Split the version number into MAJOR, MINOR, and PATCH
-  IFS='.' read -ra VERSION_PARTS <<< "$PREV_VERSION"
-  MAJOR=${VERSION_PARTS[0]}
-  MINOR=${VERSION_PARTS[1]}
-  PATCH=${VERSION_PARTS[2]}
-
-  # Increment the PATCH number by 1
-  PATCH=$((PATCH+1))
-  NEW_VERSION="$MAJOR.$MINOR.$PATCH"
-
-  update_pubspec_version "$PREV_VERSION" "$NEW_VERSION"
-
-  if [[ "$GITHUB_ENV" != "" ]]
+update_package_version() {
+  if grep -qE "version: .*" pubspec.yaml
     then
-      echo "LIBRARY_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
+      git diff HEAD~ HEAD --unified=0 -- pubspec.yaml | grep -q "+.*version: .*" &&
+        echo "Parameter 'version' in pubspec.yaml already updated, skip auto-patching..." ||
+        ../../scripts/versioning/patch_version.sh "version: " pubspec.yaml &&
+          echo "Parameter 'version' in pubspec.yaml automatically updated..." ||
+          exit 1
   fi
 }
 
 install_dependencies() {
   echo Install "$1" dependencies...
-  dart pub get
+  dart pub get || exit 1
 }
 
 prebuild() {
   echo Upgrade "$1" dependencies...
-  dart pub upgrade
+  dart pub upgrade || exit 1
 
   echo Test "$1" code...
-  dart test
+  dart test || exit 1
 
   echo Generate "$1" documentation...
-  dart doc
+  dart doc || exit 1
 }
 
 build() {
   echo Prepare "$1" package...
-  dart pub publish --dry-run
+  dart pub publish --dry-run || exit 1
 }
 
 publish() {
   echo Patch version for "$1"...
-  patch_version
-
-  scripts/github/update_git_branch.sh "$1"
+  update_package_version || exit 1
 
   echo Inject google temporary token...
   curl \
     -X POST \
     -H "Authorization: Bearer $KEYSTORE_ACCESS_TOKEN" \
     -d "{\"url\":\"https://pub.dev\",\"account\":\"pub-dev\"}" \
-    --url "$KEYSTORE_HOST/google/temporary-token" | dart pub token add https://pub.dev
+    --url "$KEYSTORE_HOST/google/temporary-token" | dart pub token add https://pub.dev || exit 1
 
   echo Publish "$1"...
-  dart pub publish --force
+  dart pub publish --force || exit 1
+
+  scripts/github/update_git_branch.sh "$1" || exit 1
 
   echo Successfull publication of "$1"
 }
@@ -82,16 +64,12 @@ main() {
   local CHANGED_FILES
   local DART_LIBRARIES
 
-  chmod +x scripts/helpers/inject_license.sh
-  chmod +x scripts/github/setup_git.sh
-  chmod +x scripts/github/update_git_branch.sh
-
   if [[ "$GITHUB_ENV" != "" ]]
     then
-      scripts/github/setup_git.sh
+      scripts/github/setup_git.sh || exit 1
   fi
 
-  CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+  CHANGED_FILES=($(git diff --name-only HEAD~1 HEAD))
 
   DART_LIBRARIES=($(ls -d1 dart/*))
   DART_LIBRARIES=("${DART_LIBRARIES[@]%/}")
@@ -104,7 +82,7 @@ main() {
         then
           echo Process "$LIBRARY_NAME"...
 
-          scripts/helpers/inject_license.sh "dart/$LIBRARY_NAME/LICENSE"
+          scripts/helpers/inject_license.sh "dart/$LIBRARY_NAME/LICENSE" || exit 1
 
           cd "dart/$LIBRARY_NAME/" || exit 1
           install_dependencies "$LIBRARY_NAME" || exit 1

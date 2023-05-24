@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LANGUAGE="$1" #required parameter
+TYPE="$1" #required parameter
 NAME="$2" #required parameter
 
 bootstrap_library() {
@@ -8,15 +8,18 @@ bootstrap_library() {
 
   case "$LANGUAGE" in
     --typescript)
+      mkdir -p typescript
       cp -rp templates/typescript "typescript/$NAME"
       scripts/helpers/inject_license.sh "typescript/$NAME/LICENSE"
     ;;
     --dart)
+      mkdir -p dart
       cp -rp templates/dart "dart/$NAME"
       scripts/helpers/inject_license.sh "dart/$NAME/LICENSE"
     ;;
-    --kotlin)
-      cp -rp templates/kotlin "kotlin/$NAME"
+    --android)
+      mkdir -p kotlin
+      cp -rp templates/kotlin/android "kotlin/$NAME"
       scripts/helpers/inject_license.sh "kotlin/$NAME/LICENSE"
     ;;
     *)

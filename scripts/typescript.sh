@@ -4,13 +4,28 @@ MODE="$1" # required parameter (publish | build)
 KEYSTORE_HOST=${KEYSTORE_HOST:-$2}
 KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$3}
 
+chmod +x scripts/helpers/inject_license.sh
+chmod +x scripts/github/setup_git.sh
+chmod +x scripts/github/update_git_branch.sh
+
 NPM_AUTH_TOKEN=""
+
+update_package_version() {
+  if grep -qE ".*\"version\": .*" package.json
+    then
+      git diff HEAD~ HEAD --unified=0 -- package.json | grep -q "+.*\"version\": .*" &&
+        echo "Parameter 'version' in package.json already updated, skip auto-patching..." ||
+        npm version patch &&
+          echo "Parameter 'version' in package.json automatically updated..." ||
+          exit 1
+  fi
+}
 
 setup_github_environment() {
   scripts/github/setup_git.sh
 
   echo Update npm...
-  npm install npm@latest -g
+  npm install npm@latest -g || exit 1
 }
 
 setup_local_environment() {
@@ -20,38 +35,38 @@ setup_local_environment() {
 
 install_modules() {
   echo Install "$1" modules...
-  npm i
+  npm i || exit 1
 }
 
 prebuild() {
   echo Setup "$1" .npmrc file...
-  npm ci
+  npm ci || exit 1
 
   echo Format "$1" code...
-  npm run format
+  npm run format || exit 1
 }
 
 build() {
   echo Build "$1"...
-  npm run build
+  npm run build || exit 1
 
   echo Successfull build of "$1"
 }
 
 publish() {
   echo Patch version for "$1"...
-  npm version patch
+  update_package_version "$1" || exit 1
 
   echo Publish "$1"...
 
   if [ -z "$GITHUB_ENV" ]
     then
-      NODE_AUTH_TOKEN="$NPM_AUTH_TOKEN" npm publish --access public
+      NODE_AUTH_TOKEN="$NPM_AUTH_TOKEN" npm publish --access public || exit 1
     else
-      NODE_AUTH_TOKEN="$NPM_AUTH_TOKEN" npm publish --access public --provenance
+      NODE_AUTH_TOKEN="$NPM_AUTH_TOKEN" npm publish --access public --provenance || exit 1
   fi
 
-  scripts/github/update_git_branch.sh "$1"
+  scripts/github/update_git_branch.sh "$1" || exit 1
 
   echo Successfull publication of "$1"
 }
@@ -60,18 +75,14 @@ main() {
   local CHANGED_FILES
   local TYPESCRIPT_LIBRARIES
 
-  chmod +x scripts/helpers/inject_license.sh
-  chmod +x scripts/github/setup_git.sh
-  chmod +x scripts/github/update_git_branch.sh
-
   if [ -z "$GITHUB_ENV" ]
     then
-      setup_local_environment
+      setup_local_environment || exit 1
     else
-      setup_github_environment
+      setup_github_environment || exit 1
   fi
 
-  CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+  CHANGED_FILES=($(git diff --name-only HEAD~1 HEAD))
 
   TYPESCRIPT_LIBRARIES=($(ls -d1 typescript/*))
   TYPESCRIPT_LIBRARIES=("${TYPESCRIPT_LIBRARIES[@]%/}")
@@ -91,7 +102,7 @@ main() {
         then
           echo Process "$LIBRARY_NAME"...
 
-          scripts/helpers/inject_license.sh "typescript/$LIBRARY_NAME/LICENSE"
+          scripts/helpers/inject_license.sh "typescript/$LIBRARY_NAME/LICENSE" || exit 1
 
           cd "typescript/$LIBRARY_NAME/" || exit 1
           install_modules "$LIBRARY_NAME" || exit 1

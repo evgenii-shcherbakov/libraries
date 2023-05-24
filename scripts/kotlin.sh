@@ -4,78 +4,60 @@ MODE="$1" # required parameter (publish | build)
 KEYSTORE_HOST=${KEYSTORE_HOST:-$2}
 KEYSTORE_ACCESS_TOKEN=${KEYSTORE_ACCESS_TOKEN:-$3}
 
-#PUBLISH_ENV_DECLARATION=""
+chmod +x scripts/helpers/inject_license.sh
+chmod +x scripts/github/setup_git.sh
+chmod +x scripts/github/update_git_branch.sh
+chmod +x scripts/versioning/patch_version.sh
+chmod +x scripts/versioning/increment_build_number.sh
 
-#MAVEN_CENTRAL_CREDENTIALS="{}"
-#
-#SONATYPE_PASSWORD=""
-#SONATYPE_USERNAME=""
-#GPG_KEY_PASSWORD=""
-#GPG_KEY_ID=""
-#GPG_KEY=""
+update_package_gradle_properties() {
+  local GRADLE_PROPERTIES_FILES
 
-#get_env_declaration() {
-#  local CREDENTIALS
-#
-#  PUBLISH_ENV_DECLARATION=$(
-#    curl \
-#      -X GET \
-#      -H "Authorization: Bearer $KEYSTORE_ACCESS_TOKEN" \
-#      --url "$KEYSTORE_HOST/applications/libraries/maven-central/credentials"
-#  )
+  GRADLE_PROPERTIES_FILES=($(find . -type f -name "gradle.properties"))
 
-#  SONATYPE_PASSWORD=$(echo "$CREDENTIALS" | jq -d '.sonatype.password')
-#  SONATYPE_USERNAME=$(echo "$CREDENTIALS" | jq -d '.sonatype.username')
-#}
+  for FILE in "${GRADLE_PROPERTIES_FILES[@]}"
+    do
+      if grep -qE "VERSION_NAME=.*" "$FILE"
+        then
+          git diff HEAD~ HEAD --unified=0 -- "$FILE" | grep -q "+.*VERSION_NAME=.*" &&
+            echo "Parameter 'VERSION_NAME' in $FILE already updated, skip auto-patching..." ||
+            ../../scripts/versioning/patch_version.sh "VERSION_NAME=" "$FILE" &&
+              echo "Parameter 'VERSION_NAME' in $FILE automatically updated..." ||
+              exit 1
+      fi
 
-#publish() {
-##  local SONATYPE_PASSWORD
-##  local SONATYPE_USERNAME
-##  local GPG_KEY_PASSWORD
-##  local GPG_KEY_ID
-##  local GPG_KEY
-##
-##  echo "Get Maven Central credentials from keystore..."
-#
-#  echo "Publish $1 to Maven Central..."
-##  ORG_GRADLE_PROJECT_mavenCentralPassword="$SONATYPE_PASSWORD" \
-##  ORG_GRADLE_PROJECT_mavenCentralUsername="$SONATYPE_USERNAME" \
-##  ORG_GRADLE_PROJECT_signingInMemoryKeyPassword="$GPG_KEY_PASSWORD" \
-##  ORG_GRADLE_PROJECT_signingInMemoryKeyId="$GPG_KEY_ID" \
-##  ORG_GRADLE_PROJECT_signingInMemoryKey="$GPG_KEY" \
-#  chmod +x ./gradlew
-#  $(echo "$2" | tr -d '"') ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
-#}
-
-#install_modules() {
-#  echo Install "$1" modules...
-#  npm i
-#}
-#
-#prebuild() {
-#  echo Setup "$1" .npmrc file...
-#  npm ci
-#
-#  echo Format "$1" code...
-#  npm run format
-#}
+      if grep -qE "BUILD_NUMBER=.*" "$FILE"
+        then
+          git diff HEAD~ HEAD --unified=0 -- "$FILE" | grep -q "+.*BUILD_NUMBER=.*" &&
+            echo "Parameter 'BUILD_NUMBER' in $FILE already updated, skip auto-patching..." ||
+            ../../scripts/versioning/increment_build_number.sh "BUILD_NUMBER=" "$FILE" &&
+              echo "Parameter 'BUILD_NUMBER' in $FILE automatically updated..." ||
+              exit 1
+      fi
+    done
+}
 
 build() {
   echo Build "$1"...
-  ./gradlew build
+  ./gradlew build || exit 1
 
   echo Successfull build of "$1"
 }
 
 publish() {
+  local ORIGINAL_GRADLE_PROPERTIES
+
   echo Patch version for "$1"...
-#  npm version patch
-# TODO: implement version patching later
+  update_package_gradle_properties "kotlin/$1" || exit 1
 
   echo Publish "$1"...
-  $(echo "$2" | tr -d '"') ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
+  ORIGINAL_GRADLE_PROPERTIES=$(<gradle.properties)
+  echo "" >> gradle.properties
+  echo "$2" | tr -d '"' >> gradle.properties
+  ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache || exit 1
+  echo "$ORIGINAL_GRADLE_PROPERTIES" > gradle.properties
 
-  scripts/github/update_git_branch.sh "$1"
+  scripts/github/update_git_branch.sh "$1" || exit 1
 
   echo Successfull publication of "$1"
 }
@@ -85,25 +67,21 @@ main() {
   local TYPESCRIPT_LIBRARIES
   local PUBLISH_ENV_DECLARATION
 
-  chmod +x scripts/helpers/inject_license.sh
-  chmod +x scripts/github/setup_git.sh
-  chmod +x scripts/github/update_git_branch.sh
-
   if [[ "$GITHUB_ENV" != "" ]]
     then
-      scripts/github/setup_git.sh
+      scripts/github/setup_git.sh || exit 1
   fi
 
-  CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+  CHANGED_FILES=($(git diff --name-only HEAD~1 HEAD))
 
   KOTLIN_LIBRARIES=($(ls -d1 kotlin/*))
   KOTLIN_LIBRARIES=("${KOTLIN_LIBRARIES[@]%/}")
 
-  PUBLISH_ENV_DECLARATION=$(
+  PUBLISH_PROPERTIES=$(
     curl \
       -X POST \
       -H "Authorization: Bearer $KEYSTORE_ACCESS_TOKEN" \
-      -d "{\"format\":\"maven-env-string\"}" \
+      -d "{\"format\":\"gradle-properties\"}" \
       --url "$KEYSTORE_HOST/applications/libraries/publishing/maven-central"
   )
 
@@ -115,17 +93,15 @@ main() {
         then
           echo Process "$LIBRARY_NAME"...
 
-          scripts/helpers/inject_license.sh "kotlin/$LIBRARY_NAME/LICENSE"
+          scripts/helpers/inject_license.sh "kotlin/$LIBRARY_NAME/LICENSE" || exit 1
 
           cd "kotlin/$LIBRARY_NAME/" || exit 1
-          chmod +x ./gradlew
-#          install_modules "$LIBRARY_NAME" || exit 1
-#          prebuild "$LIBRARY_NAME" || exit 1
+          chmod +x ./gradlew || exit 1
           build "$LIBRARY_NAME" || exit 1
 
           if [[ "$MODE" == "publish" ]]
             then
-              publish "$LIBRARY_NAME" "$PUBLISH_ENV_DECLARATION" || exit 1
+              publish "$LIBRARY_NAME" "$PUBLISH_PROPERTIES" || exit 1
           fi
 
           cd ../..
@@ -136,12 +112,3 @@ main() {
 }
 
 main
-
-#chmod +x ./gradlew
-#
-#ORG_GRADLE_PROJECT_mavenCentralPassword="$SONATYPE_PASSWORD" \
-#ORG_GRADLE_PROJECT_mavenCentralUsername="$SONATYPE_USERNAME" \
-#ORG_GRADLE_PROJECT_signingInMemoryKeyPassword="$GPG_KEY_PASSWORD" \
-#ORG_GRADLE_PROJECT_signingInMemoryKeyId="$GPG_KEY_ID" \
-#ORG_GRADLE_PROJECT_signingInMemoryKey="$GPG_KEY" \
-#  ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache

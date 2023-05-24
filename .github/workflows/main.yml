@@ -1,0 +1,140 @@
+name: 'Main'
+
+on:
+  push:
+    paths:
+      - 'typescript/**'
+      - 'dart/**'
+      - 'kotlin/**'
+    branches:
+      - 'main'
+  pull_request:
+    paths:
+      - 'typescript/**'
+      - 'dart/**'
+      - 'kotlin/**'
+    branches:
+      - 'main'
+
+env:
+  KEYSTORE_HOST: '${{ secrets.KEYSTORE_HOST }}'
+  KEYSTORE_ACCESS_TOKEN: '${{ secrets.KEYSTORE_ACCESS_TOKEN }}'
+
+jobs:
+  typescript-build:
+    name: 'Typescript (build)'
+    runs-on: 'ubuntu-latest'
+    if: ${{ github.event_name == 'pull_request' && contains(github.event.head_commit.modified, 'typescript/') }}
+
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+        with:
+          fetch-depth: 2
+      - uses: 'actions/setup-node@v3'
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@evgenii-shcherbakov'
+          always-auth: 'true'
+      - name: 'Build libraries with changes'
+        run: 'chmod +x scripts/typescript.sh && scripts/typescript.sh build'
+
+  typescript-publish:
+    name: 'Typescript (publish)'
+    runs-on: 'ubuntu-latest'
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'typescript/') }}
+
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+        with:
+          fetch-depth: 2
+      - uses: 'actions/setup-node@v3'
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@evgenii-shcherbakov'
+          always-auth: 'true'
+      - name: 'Build & publish libraries with changes'
+        run: 'chmod +x scripts/typescript.sh && scripts/typescript.sh publish'
+
+  dart-build:
+    name: 'Dart (build)'
+    runs-on: 'ubuntu-latest'
+    if: ${{ github.event_name == 'pull_request' && contains(github.event.head_commit.modified, 'dart/') }}
+
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+        with:
+          fetch-depth: 2
+      - uses: 'dart-lang/setup-dart@v1'
+      - name: 'Build libraries with changes'
+        run: 'chmod +x scripts/dart.sh && scripts/dart.sh build'
+
+  dart-publish:
+    name: 'Dart (publish)'
+    runs-on: 'ubuntu-latest'
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'dart/') }}
+
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+        with:
+          fetch-depth: 2
+      - uses: 'dart-lang/setup-dart@v1'
+      - name: 'Build & publish libraries with changes'
+        run: 'chmod +x scripts/dart.sh && scripts/dart.sh publish'
+
+  kotlin-build:
+    name: 'Kotlin (build)'
+    runs-on: 'ubuntu-latest'
+    if: ${{ github.event_name == 'pull_request' && contains(github.event.head_commit.modified, 'kotlin/') }}
+
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+        with:
+          fetch-depth: 2
+      - uses: 'actions/setup-java@v2'
+        with:
+          distribution: 'zulu'
+          java-version: 19
+      - name: 'Build libraries with changes'
+        run: 'chmod +x scripts/kotlin.sh && scripts/kotlin.sh build'
+
+  kotlin-publish:
+    name: 'Kotlin (publish)'
+    runs-on: 'ubuntu-latest'
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.modified, 'kotlin/') }}
+
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+
+    steps:
+      - uses: 'actions/checkout@v3'
+        with:
+          fetch-depth: 2
+      - uses: 'actions/setup-java@v2'
+        with:
+          distribution: 'zulu'
+          java-version: 19
+      - name: 'Build & publish libraries with changes'
+        run: 'chmod +x scripts/kotlin.sh && scripts/kotlin.sh publish'
