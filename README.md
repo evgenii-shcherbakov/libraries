@@ -63,15 +63,15 @@ Now you can use linked library
 ##### Build all changed typescript libs
 
 ```shell
-chmod +x scripts/typescript.sh
-scripts/typescript.sh build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+chmod +x scripts/main.sh
+scripts/main.sh typescript build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
 ```
 
 ##### Build and publish all changed typescript libs
 
 ```shell
-chmod +x scripts/typescript.sh
-scripts/typescript.sh publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+chmod +x scripts/main.sh
+scripts/main.sh typescript publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
 ```
 
 ---
@@ -89,15 +89,15 @@ cd dart/$LIBRARY_NAME
 ##### Build all changed dart libs
 
 ```shell
-chmod +x scripts/dart.sh
-scripts/dart.sh build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+chmod +x scripts/main.sh
+scripts/main.sh dart build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
 ```
 
 ##### Build and publish all changed dart libs
 
 ```shell
-chmod +x scripts/dart.sh
-scripts/dart.sh publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+chmod +x scripts/main.sh
+scripts/main.sh dart publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
 ```
 
 ---
@@ -108,22 +108,23 @@ scripts/dart.sh publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
 
 ```shell
 chmod +x scripts/helpers/new.sh
-scripts/helpers/new.sh --kotlin $LIBRARY_NAME
+scripts/helpers/new.sh --android $LIBRARY_NAME # for android library
+scripts/helpers/new.sh --jvm $LIBRARY_NAME # for jvm library
 cd kotlin/$LIBRARY_NAME
 ```
 
 ##### Build all changed kotlin libs
 
 ```shell
-chmod +x scripts/kotlin.sh
-scripts/kotlin.sh build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+chmod +x scripts/main.sh
+scripts/main.sh kotlin build $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
 ```
 
 ##### Build and publish all changed kotlin libs
 
 ```shell
-chmod +x scripts/kotlin.sh
-scripts/kotlin.sh publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
+chmod +x scripts/main.sh
+scripts/main.sh kotlin publish $KEYSTORE_HOST $KEYSTORE_ACCESS_TOKEN
 ```
 
 ---
