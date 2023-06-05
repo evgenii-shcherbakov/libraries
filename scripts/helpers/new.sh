@@ -6,7 +6,7 @@ NAME="$2" #required parameter
 bootstrap_library() {
   chmod +x scripts/helpers/inject_license.sh
 
-  case "$LANGUAGE" in
+  case "$TYPE" in
     --typescript)
       mkdir -p typescript
       cp -rp templates/typescript "typescript/$NAME"
@@ -22,8 +22,13 @@ bootstrap_library() {
       cp -rp templates/kotlin/android "kotlin/$NAME"
       scripts/helpers/inject_license.sh "kotlin/$NAME/LICENSE"
     ;;
+    --jvm)
+      mkdir -p kotlin
+      cp -rp templates/kotlin/jvm "kotlin/$NAME"
+      scripts/helpers/inject_license.sh "kotlin/$NAME/LICENSE"
+    ;;
     *)
-      echo "Exception: language not supported yet" && exit 1
+      echo "Exception: type not supported yet" && exit 1
     ;;
   esac
 }

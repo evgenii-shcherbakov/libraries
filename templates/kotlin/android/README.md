@@ -1,2 +1,2 @@
 # library
-Kotlin library for something
+Kotlin android library for something
