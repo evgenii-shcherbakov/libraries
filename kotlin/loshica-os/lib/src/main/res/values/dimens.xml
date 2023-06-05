@@ -1,0 +1,10 @@
+<resources>
+    <dimen name="small_padding">10dp</dimen>
+    <dimen name="base_padding">25dp</dimen>
+
+    <dimen name="base_corner">20dp</dimen>
+    <dimen name="base_text">16sp</dimen>
+
+    <dimen name="about_logo">150dp</dimen>
+    <dimen name="dialog_elevation">4dp</dimen>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="LOSSectionHeaderStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:paddingTop">@dimen/base_padding</item>
+        <item name="android:paddingBottom">@dimen/small_padding</item>
+        <item name="android:paddingHorizontal">@dimen/base_padding</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/base_text</item>
+    </style>
+
+</resources>

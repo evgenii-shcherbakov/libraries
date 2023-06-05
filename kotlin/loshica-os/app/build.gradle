@@ -1,0 +1,87 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+def keystoreProperties = new Properties()
+def keystoreFile = file('keystore/keystore.properties')
+def hasKeystore = keystoreFile.exists() || System.getenv('KEYSTORE_PASSWORD')
+
+assert ARTIFACT_ID != null
+assert VERSION_NAME != null
+assert BUILD_NUMBER != null
+
+android {
+    namespace ARTIFACT_ID
+    compileSdk 33
+
+    defaultConfig {
+        applicationId ARTIFACT_ID
+        minSdk 24
+        targetSdk 33
+        versionCode BUILD_NUMBER.toString().toInteger()
+        versionName VERSION_NAME
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    if (hasKeystore) {
+        signingConfigs {
+            release {
+                if (keystoreFile.exists()) {
+                    file('keystore/keystore.properties').withInputStream {
+                        keystoreProperties.load(it)
+                    }
+
+                    storeFile file("$keystoreProperties.storeFile")
+                    storePassword "$keystoreProperties.storePassword"
+                    keyAlias "$keystoreProperties.keyAlias"
+                    keyPassword "$keystoreProperties.keyPassword"
+                } else {
+                    storeFile file('keystore/release.keystore')
+                    storePassword System.getenv('KEYSTORE_PASSWORD')
+                    keyAlias System.getenv('RELEASE_SIGN_KEY_ALIAS')
+                    keyPassword System.getenv('RELEASE_SIGN_KEY_PASSWORD')
+                }
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (hasKeystore) {
+                signingConfig signingConfigs.release
+            }
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    implementation project(path: ':lib')
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.fragment:fragment-ktx:1.5.7'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.21'
+}

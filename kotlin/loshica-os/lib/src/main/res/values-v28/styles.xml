@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LOSDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog.Centered">
+        <item name="android:dialogCornerRadius">@dimen/base_corner</item>
+        <item name="android:windowElevation">@dimen/dialog_elevation</item>
+    </style>
+</resources>
