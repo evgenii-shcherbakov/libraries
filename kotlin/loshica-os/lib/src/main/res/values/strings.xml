@@ -1,0 +1,32 @@
+<resources>
+
+    <string name="colored_btn_text">\u2714</string>
+
+    <!--  labels  -->
+
+    <string name="settings_label">Настройки</string>
+
+    <!-- меню -->
+
+    <string name="settings_action">Настройки</string>
+
+    <!-- настройки -->
+
+    <string name="theme_group_header">Внешний вид</string>
+
+    <string name="accent_section">Цвет акцента</string>
+    <string name="theme_section">Тема</string>
+
+    <string name="other_group_header">Другое</string>
+
+    <string name="about_section">Информация</string>
+    <string name="about_logo_desc">Логотип</string>
+    <string name="about_primary">Loshica OS 5.0</string>
+    <string name="about_secondary">Loshica Corporation\u2122\n\u00a9 all rights reserved</string>
+
+    <!-- диалоговые окна -->
+
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+
+</resources>
