@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- тема (названия+значения) -->
+
+    <string-array name="theme_labels">
+        <item>Как в системе</item>
+        <item>Темная</item>
+        <item>Светлая</item>
+    </string-array>
+    <integer-array name="theme_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </integer-array>
+
+    <!--  -->
+
+</resources>

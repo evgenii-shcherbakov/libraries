@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Кастомные аттрибуты -->
+
+    <attr name="mainBgColor" format="reference" />
+    <attr name="secondaryBgColor" format="reference" />
+    <attr name="additionalBgColor" format="reference" />
+    <attr name="hoverBgColor" format="reference" />
+    <attr name="mainTextColor" format="reference" />
+    <attr name="secondaryTextColor" format="reference" />
+    <attr name="switchThumbColor" format="reference" />
+    <attr name="switchDisabledThumbColor" format="reference" />
+
+    <attr name="secondaryAlpha" format="reference" />
+    <attr name="disabledAlpha" format="reference" />
+
+    <!-- Материнская темная тема -->
+
+    <style name="LOSTheme_BaseDark" parent="Theme.MaterialComponents">
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="actionBarStyle">@style/LOSActionBarStyle</item>
+        <item name="materialButtonStyle">@style/LOSButtonStyle</item>
+        <item name="dialogCornerRadius">@dimen/base_corner</item>
+<!--        <item name="android:switchStyle">@style/LOSSwitchStyle</item>-->
+        <item name="android:windowContentOverlay">@drawable/los_actionbar_shadow_dark</item>
+
+        <item name="secondaryAlpha">@dimen/secondary_alpha</item>
+        <item name="disabledAlpha">@dimen/disabled_alpha</item>
+
+        <item name="android:textSize">@dimen/base_text</item>
+
+        <item name="materialAlertDialogTheme">@style/LOSDialog</item>
+    </style>
+
+    <!-- Черная тема -->
+
+    <style name="LOSTheme_Black" parent="LOSTheme_BaseDark">
+        <item name="colorPrimary">?attr/colorAccent</item>
+
+        <item name="mainBgColor">@color/black</item>
+        <item name="secondaryBgColor">@color/lightBlack</item>
+        <item name="additionalBgColor">@color/lighterBlack</item>
+        <item name="hoverBgColor">@color/darkerGrey</item>
+        <item name="mainTextColor">@color/lightBeige</item>
+        <item name="secondaryTextColor">@color/ashen</item>
+        <item name="switchThumbColor">@color/lightBeige</item>
+        <item name="switchDisabledThumbColor">@color/darkBeige</item>
+    </style>
+
+    <style name="LOSTheme_BlackOxygen" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/oxygenBlue</item>
+    </style>
+
+    <style name="LOSTheme_BlackBrown" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/brown</item>
+    </style>
+
+    <style name="LOSTheme_BlackOrange" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/orange</item>
+    </style>
+
+    <style name="LOSTheme_BlackLGreen" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/lightGreen</item>
+    </style>
+
+    <style name="LOSTheme_BlackViolet" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/violet</item>
+    </style>
+
+    <style name="LOSTheme_BlackCyan" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/cyan</item>
+    </style>
+
+    <style name="LOSTheme_BlackPink" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/pink</item>
+    </style>
+
+    <style name="LOSTheme_BlackAosp" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/aosp</item>
+    </style>
+
+    <style name="LOSTheme_BlackRed" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/red</item>
+    </style>
+
+    <style name="LOSTheme_BlackDBlue" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/darkBlue</item>
+    </style>
+
+    <style name="LOSTheme_BlackDGreen" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/darkGreen</item>
+    </style>
+
+    <style name="LOSTheme_BlackWhite" parent="LOSTheme_Black">
+        <item name="colorAccent">@color/white</item>
+    </style>
+
+    <!-- Материнская светлая тема -->
+
+    <style name="LOSTheme_BaseLight" parent="Theme.MaterialComponents.Light">
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="actionBarStyle">@style/LOSActionBarStyle</item>
+        <item name="materialButtonStyle">@style/LOSButtonStyle</item>
+        <item name="dialogCornerRadius">@dimen/base_corner</item>
+
+        <item name="secondaryAlpha">@dimen/secondary_alpha</item>
+        <item name="disabledAlpha">@dimen/disabled_alpha</item>
+
+        <item name="android:textSize">@dimen/base_text</item>
+
+        <item name="materialAlertDialogTheme">@style/LOSDialog</item>
+    </style>
+
+    <!-- Светлая тема -->
+
+    <style name="LOSTheme_Light" parent="LOSTheme_BaseLight">
+        <item name="colorPrimary">?attr/colorAccent</item>
+
+        <item name="mainBgColor">@color/darkerWhite</item>
+        <item name="secondaryBgColor">@color/darkWhite</item>
+        <item name="additionalBgColor">@color/white</item>
+        <item name="hoverBgColor">@color/lighterBeige</item>
+        <item name="mainTextColor">@color/lightBlack</item>
+        <item name="secondaryTextColor">@color/lighterGrey</item>
+        <item name="switchThumbColor">@color/beige</item>
+        <item name="switchDisabledThumbColor">@color/lightBeige</item>
+    </style>
+
+    <style name="LOSTheme_LightOxygen" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/oxygenBlue</item>
+    </style>
+
+    <style name="LOSTheme_LightBrown" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/brown</item>
+    </style>
+
+    <style name="LOSTheme_LightOrange" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/orange</item>
+    </style>
+
+    <style name="LOSTheme_LightLGreen" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/lightGreen</item>
+    </style>
+
+    <style name="LOSTheme_LightViolet" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/violet</item>
+    </style>
+
+    <style name="LOSTheme_LightCyan" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/cyan</item>
+    </style>
+
+    <style name="LOSTheme_LightPink" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/pink</item>
+    </style>
+
+    <style name="LOSTheme_LightAosp" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/aosp</item>
+    </style>
+
+    <style name="LOSTheme_LightRed" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/red</item>
+    </style>
+
+    <style name="LOSTheme_LightDBlue" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/darkBlue</item>
+    </style>
+
+    <style name="LOSTheme_LightDGreen" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/darkGreen</item>
+    </style>
+
+    <style name="LOSTheme_LightBlack" parent="LOSTheme_Light">
+        <item name="colorAccent">@color/black</item>
+    </style>
+</resources>

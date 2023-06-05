@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Цвета акцента -->
+
+    <color name="oxygenBlue">#42A5F6</color>
+    <color name="brown">#CC6F4E</color>
+    <color name="orange">#E5A544</color>
+    <color name="lightGreen">#7DC32F</color>
+    <color name="violet">#9675CE</color>
+    <color name="cyan">#25C6DA</color>
+    <color name="pink">#F06292</color>
+    <color name="aosp">#80CBC4</color>
+    <color name="red">#EB0028</color>
+    <color name="darkBlue">#4461D6</color>
+    <color name="darkGreen">#208559</color>
+    <color name="yellow">#FCFA00</color>
+
+    <!-- Бело-черная палитра (для интерфейса) -->
+
+    <color name="black">#000</color>
+    <color name="lightBlack">#121212</color>
+    <color name="lighterBlack">#212121</color>
+    <color name="darkerGrey">#282828</color>
+    <color name="darkGrey">#313131</color>
+    <color name="grey">#424242</color>
+    <color name="lightGrey">#484848</color>
+    <color name="lighterGrey">#696969</color>
+    <color name="darkerAshen">#757575</color>
+    <color name="darkAshen">#7A7A7A</color>
+    <color name="ashen">#898989</color>
+    <color name="lightAshen">#969696</color>
+    <color name="lighterAshen">#A1A1A1</color>
+    <color name="darkerBeige">#A9A9A9</color>
+    <color name="darkBeige">#B4B4B4</color>
+    <color name="beige">#C4C4C4</color>
+    <color name="lightBeige">#DCDCDC</color>
+    <color name="lighterBeige">#E1E1E1</color>
+    <color name="darkerWhite">#F2F2F2</color>
+    <color name="darkWhite">#FAFAFA</color>
+    <color name="white">#FFF</color>
+
+    <!-- прозрачность -->
+
+    <item name="secondary_alpha" format="float" type="dimen">0.6</item>
+    <item name="disabled_alpha" format="float" type="dimen">0.3</item>
+
+</resources>

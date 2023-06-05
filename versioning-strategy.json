@@ -1,0 +1,57 @@
+{
+  "typescript": [
+    {
+      "files": [
+        "package.json",
+        "package-lock.json"
+      ],
+      "pattern":{
+        "search": "\"version\": ",
+        "read": "/&/s/.*\"\\([^\",]*\\)\".*/\\1/p",
+        "replace": "\"version\": \"&\","
+      },
+      "public": "version",
+      "type": "patch"
+    }
+  ],
+  "dart": [
+    {
+      "files": [
+        "pubspec.yaml"
+      ],
+      "pattern":{
+        "search": "^version: ",
+        "read": "/&/s/.*: \\([^:]*\\)/\\1/p",
+        "replace": "version: &"
+      },
+      "public": "version",
+      "type": "patch"
+    }
+  ],
+  "kotlin": [
+    {
+      "files": [
+        "gradle.properties"
+      ],
+      "pattern":{
+        "search": "^VERSION_NAME=",
+        "read": "/&/s/.*=\\([^=]*\\).*/\\1/p",
+        "replace": "VERSION_NAME=&"
+      },
+      "public": "VERSION_NAME",
+      "type": "patch"
+    },
+    {
+      "files": [
+        "gradle.properties"
+      ],
+      "pattern":{
+        "search": "^BUILD_NUMBER=",
+        "read": "/&/s/.*=\\([^=]*\\).*/\\1/p",
+        "replace": "BUILD_NUMBER=&"
+      },
+      "public": "BUILD_NUMBER",
+      "type": "increment"
+    }
+  ]
+}
