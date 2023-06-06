@@ -20,7 +20,7 @@
         "pubspec.yaml"
       ],
       "pattern":{
-        "search": "^version: ",
+        "search": "version: ",
         "read": "/&/s/.*: \\([^:]*\\)/\\1/p",
         "replace": "version: &"
       },
@@ -34,7 +34,7 @@
         "gradle.properties"
       ],
       "pattern":{
-        "search": "^VERSION_NAME=",
+        "search": "VERSION_NAME=",
         "read": "/&/s/.*=\\([^=]*\\).*/\\1/p",
         "replace": "VERSION_NAME=&"
       },
@@ -46,7 +46,7 @@
         "gradle.properties"
       ],
       "pattern":{
-        "search": "^BUILD_NUMBER=",
+        "search": "BUILD_NUMBER=",
         "read": "/&/s/.*=\\([^=]*\\).*/\\1/p",
         "replace": "BUILD_NUMBER=&"
       },
