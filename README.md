@@ -39,8 +39,8 @@ npm i
 ##### Bootstrap new typescript library
 
 ```shell
-chmod +x scripts/new.sh
-scripts/new.sh --typescript $LIBRARY_NAME
+chmod +x scripts/helpers/new.sh
+scripts/helpers/new.sh --typescript $LIBRARY_NAME
 cd typescript/$LIBRARY_NAME
 ```
 
