@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "declaration": true,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "strictNullChecks": false
+  },
+  "include": ["src", "examples"],
+  "exclude": ["node_modules", "dist", "test"]
+}

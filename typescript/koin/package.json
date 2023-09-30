@@ -1,0 +1,43 @@
+{
+  "name": "@evgenii-shcherbakov/koin",
+  "version": "1.0.0",
+  "description": "Like-Koin DI library",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/evgenii-shcherbakov/libraries.git",
+    "directory": "typescript/koin"
+  },
+  "bugs": {
+    "url": "https://github.com/evgenii-shcherbakov/libraries/issues"
+  },
+  "homepage": "https://github.com/evgenii-shcherbakov/libraries/tree/main/typescript/koin/README.md",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "format": "prettier --write src",
+    "build": "rm -rf dist && tsc",
+    "mount": "npm run build && npm link",
+    "pub": "npm run format && npm run build && npm version patch && npm publish",
+    "examples:debug": "ts-node examples/main.ts --watch"
+  },
+  "keywords": [],
+  "author": "Evgenii Scherbakov <iipekolict@gmail.com>",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.3"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
