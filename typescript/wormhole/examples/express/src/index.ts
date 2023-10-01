@@ -2,7 +2,7 @@ import { Express, Request, Response, NextFunction } from 'express';
 import { AxiosInstance } from 'axios';
 import express from 'express';
 import axios from 'axios';
-import { DynamicWormhole, DynamicWormholeClass, WormholeService } from '../../src';
+import { DynamicWormhole, DynamicWormholeFactory, WormholeBuilder } from '../../../src';
 
 type Todo = {
   userId: number;
@@ -18,7 +18,7 @@ type Post = {
   body: string;
 };
 
-type State = {
+export type State = {
   todos: Todo[];
   posts: Post[];
   isPostsSame?: boolean;
@@ -32,7 +32,7 @@ const state: State = {
 
 const httpClient: AxiosInstance = axios.create({ baseURL: 'https://jsonplaceholder.typicode.com' });
 const app: Express = express();
-const Wormhole: DynamicWormholeClass<State> = WormholeService.create(state);
+const Wormhole: DynamicWormholeFactory<State> = new WormholeBuilder(state).dynamic;
 
 const getFirstTodo = async (): Promise<Todo> => {
   return (await httpClient.get<Todo>('todos/1')).data;
@@ -47,7 +47,7 @@ const getPosts = async (): Promise<Post[]> => {
 };
 
 const loadPostsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const wormhole: DynamicWormhole<State> = new Wormhole(req);
+  const wormhole: DynamicWormhole<State> = Wormhole(req);
   const posts: Post[] = await getPosts();
 
   wormhole.setPosts(posts);
@@ -55,7 +55,7 @@ const loadPostsMiddleware = async (req: Request, res: Response, next: NextFuncti
 };
 
 const loadTodosMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const wormhole: DynamicWormhole<State> = WormholeService.getInstance(req);
+  const wormhole: DynamicWormhole<State> = Wormhole(req);
   const todos: Todo[] = await getTodos();
 
   wormhole.setTodos(todos);
@@ -63,7 +63,7 @@ const loadTodosMiddleware = async (req: Request, res: Response, next: NextFuncti
 };
 
 const customSettersMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const wormhole: DynamicWormhole<State> = WormholeService.getInstance(req);
+  const wormhole: DynamicWormhole<State> = Wormhole(req);
   const todo: Todo = await getFirstTodo();
   const posts: Post[] = await getPosts();
 
@@ -81,13 +81,7 @@ const customSettersMiddleware = async (req: Request, res: Response, next: NextFu
 };
 
 const checkStateMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  if (!WormholeService.initialized) {
-    return next(new Error('Not initialized yet'));
-  }
-
-  console.log('Wormhole class', WormholeService.class);
-
-  const wormhole: DynamicWormhole<State> = new Wormhole(req);
+  const wormhole: DynamicWormhole<State> = Wormhole(req);
   console.log('Get posts #1 method', `${wormhole.getPosts().length} items`);
   console.log('Get posts #2 method', `${wormhole.get('posts').length} items`);
 
@@ -107,7 +101,7 @@ const checkStateMiddleware = async (req: Request, res: Response, next: NextFunct
 };
 
 const endpoint = async (req: Request, res: Response) => {
-  const wormhole: DynamicWormhole<State> = new Wormhole(req);
+  const wormhole: DynamicWormhole<State> = Wormhole(req);
 
   res.json({
     todos: wormhole.getTodos(),

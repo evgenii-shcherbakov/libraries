@@ -1,7 +1,7 @@
 {
   "name": "@evgenii-shcherbakov/wormhole",
-  "version": "1.0.8",
-  "description": "Library for handle backend state between middlewares in Express / Express-based frameworks",
+  "version": "2.0.0",
+  "description": "Library for handle backend state between middlewares in TypeScript frameworks",
   "repository": {
     "type": "git",
     "url": "ssh://git@github.com/evgenii-shcherbakov/libraries.git",
@@ -22,7 +22,7 @@
     "build": "rm -rf dist && tsc",
     "mount": "npm run build && npm link",
     "pub": "npm run format && npm run build && npm version patch && npm publish",
-    "example:express": "ts-node examples/express/index.ts"
+    "example:express": "cd examples/express && npm run start"
   },
   "keywords": [],
   "author": "Evgenii Scherbakov <iipekolict@gmail.com>",
@@ -31,18 +31,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/express": "^4.17.17",
-    "@types/node": "^20.0.0",
-    "axios": "^1.4.0",
-    "express": "^4.18.2",
-    "prettier": "2.6.2",
-    "ts-node": "^10.9.1",
     "typescript": "^4.7.3"
-  },
-  "peerDependencies": {
-    "@types/express": "^4.17.17",
-    "express": "^4.18.2"
   },
   "engines": {
     "node": ">=18.x"

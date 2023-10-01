@@ -1,10 +1,8 @@
-import { Request } from 'express';
-
 /**
  * @description utility types. Don't change it
  */
 
-export type StorableRequest<StorageType extends Object> = Request & {
+export type StorageProvider<StorageType extends object = object> = {
   storage?: StorageType;
 };
 
