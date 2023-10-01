@@ -1,6 +1,6 @@
 {
   "name": "@evgenii-shcherbakov/wormhole",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "description": "Library for handle backend state between middlewares in TypeScript frameworks",
   "repository": {
     "type": "git",
