@@ -1,20 +1,22 @@
 # Wormhole
-TypeScript library for handle backend state between middlewares in Express / Express-based frameworks using Request object
+TypeScript library for handle backend state between middlewares in TypeScript frameworks
 
 # Installation
 
 ```shell
-npm install @iipekolict/wormhole
+npm install @evgenii-shcherbakov/wormhole
 ```
 
 # Usage
 
-Configuring dynamic wormhole based on initial state object (highly recommended)
+Configure dynamic wormhole based on initial state object
 
 ```typescript
-import { WormholeBuilder, DynamicWormholeClass } from '@iipekolict/wormhole';
+// project.ts
 
-type State = {
+import { WormholeBuilder, DynamicWormholeFactory } from '@evgenii-shcherbakov/wormhole';
+
+export type State = {
   todos: object[];
   posts: object[];
   missing?: boolean;
@@ -27,22 +29,41 @@ const state: State = {
 };
 
 // create dynamic wormhole class with utility methods based on initial state object
-const Wormhole: DynamicWormholeClass<State> = WormholeBuilder.create(state);
+const Wormhole: DynamicWormholeFactory<State> = new WormholeBuilder(state).dynamic;
+```
+
+If you use Express, declare type top-level declarations for Request object
+
+```typescript
+// global.d.ts
+
+import { StorageProvider } from '@evgenii-shcherbakov/wormhole';
+import { State } from 'project';
+
+declare global {
+  namespace Express {
+    interface Request extends StorageProvider<State> {}
+  }
+}
+
+export {};
 ```
 
 Then use it inside middlewares and endpoints for set / get state fields
 
 ```typescript
-import { WormholeBuilder, DynamicWormhole, DynamicWormholeClass } from '@iipekolict/wormhole';
+// project.ts
+
+import { Wormhole, WormholeBuilder, DynamicWormhole, DynamicWormholeFactory } from '@evgenii-shcherbakov/wormhole';
 import express, { Request, Response, NextFunction } from 'express';
-import { fetchTodos } from 'project'
+import { fetchTodos } from 'any'
 
 // ...previous example
 
 const app = express();
 
 app.use(async (request: Request, response: Response, next: NextFunction) => {
-  const wormhole: DynamicWormhole<State> = new Wormhole(request);
+  const wormhole: DynamicWormhole<State> = Wormhole(request);
   const todos: object[] = await fetchTodos();
   
   wormhole.set({ todos }); // set todos field in backend state
@@ -51,7 +72,7 @@ app.use(async (request: Request, response: Response, next: NextFunction) => {
 });
 
 app.use(async (request: Request, response: Response, next: NextFunction) => {
-  const wormhole: DynamicWormhole<State> = new Wormhole(request);
+  const wormhole: DynamicWormhole<State> = Wormhole(request);
   
   console.log(wormhole.get('todos')); // [...todos]
   console.log(wormhole.getTodos()); // [...todos]
@@ -62,8 +83,8 @@ app.use(async (request: Request, response: Response, next: NextFunction) => {
 });
 
 app.get('/', async (request: Request, response: Response, next: NextFunction) => {
-  // wormhole factory, same as new Wormhole()
-  const wormhole: DynamicWormhole<State> = WormholeBuilder.getInstance<State>(request);
+  // static wormhole (without auto-generation of methods)
+  const wormhole: Wormhole<State> = new WormholeBuilder(state).static(request);
   
   console.log(wormhole.get('missing')); // undefined
   
@@ -76,7 +97,7 @@ app.listen(5000);
 Creating custom setter
 
 ```typescript
-const wormhole: DynamicWormhole<State> = new Wormhole(request);
+const wormhole: DynamicWormhole<State> = Wormhole(request);
 
 const setter = wormhole.createSetter((state: State, todo: object) => {
   return { todos: [...state.todos, todo] };
@@ -88,7 +109,7 @@ setter({ text: 'some text' });
 Creating custom spread setter
 
 ```typescript
-const wormhole: DynamicWormhole<State> = new Wormhole(request);
+const wormhole: DynamicWormhole<State> = Wormhole(request);
 
 const spreadSetter = wormhole.createSpreadSetter((state: State, ...posts: Post[]) => {
   return { posts: [...state.posts, ...posts] };
@@ -99,4 +120,4 @@ spreadSetter({ text: 'some text' }, { text: 'another text' });
 
 # Examples
 
-[Express](https://github.com/IIPEKOLICT/libraries/blob/main/typescript/wormhole/examples/express/index.ts)
+[Express](https://github.com/IIPEKOLICT/libraries/blob/main/typescript/wormhole/examples/express)
