@@ -1,9 +1,7 @@
 import { CustomWormholeMapper, CustomWormholeSpreadMapper } from './custom';
 import { StorageTypeField } from './utility';
 
-export interface IWormhole<StorageType extends Object> {
-  readonly storage: StorageType;
-
+export interface Wormhole<StorageType extends object> {
   get<Field extends StorageTypeField<StorageType>>(field: Field): StorageType[Field];
   set(data: Partial<StorageType>): void;
 

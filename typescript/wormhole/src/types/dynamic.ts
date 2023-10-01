@@ -1,4 +1,4 @@
-import { IWormhole } from './interfaces';
+import { Wormhole } from './interfaces';
 import { StorageTypeNonNullableField } from './utility';
 
 type DynamicGetters<StorageType extends Object> = {
@@ -11,6 +11,6 @@ type DynamicSetters<StorageType extends Object> = {
   ) => void;
 };
 
-export type DynamicWormhole<StorageType extends Object> = IWormhole<StorageType> &
+export type DynamicWormhole<StorageType extends Object> = Wormhole<StorageType> &
   DynamicGetters<StorageType> &
   DynamicSetters<StorageType>;

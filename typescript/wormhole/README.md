@@ -12,7 +12,7 @@ npm install @iipekolict/wormhole
 Configuring dynamic wormhole based on initial state object (highly recommended)
 
 ```typescript
-import { WormholeService, DynamicWormholeClass } from '@iipekolict/wormhole';
+import { WormholeBuilder, DynamicWormholeClass } from '@iipekolict/wormhole';
 
 type State = {
   todos: object[];
@@ -27,13 +27,13 @@ const state: State = {
 };
 
 // create dynamic wormhole class with utility methods based on initial state object
-const Wormhole: DynamicWormholeClass<State> = WormholeService.create(state);
+const Wormhole: DynamicWormholeClass<State> = WormholeBuilder.create(state);
 ```
 
 Then use it inside middlewares and endpoints for set / get state fields
 
 ```typescript
-import { WormholeService, DynamicWormhole, DynamicWormholeClass } from '@iipekolict/wormhole';
+import { WormholeBuilder, DynamicWormhole, DynamicWormholeClass } from '@iipekolict/wormhole';
 import express, { Request, Response, NextFunction } from 'express';
 import { fetchTodos } from 'project'
 
@@ -63,7 +63,7 @@ app.use(async (request: Request, response: Response, next: NextFunction) => {
 
 app.get('/', async (request: Request, response: Response, next: NextFunction) => {
   // wormhole factory, same as new Wormhole()
-  const wormhole: DynamicWormhole<State> = WormholeService.getInstance<State>(request);
+  const wormhole: DynamicWormhole<State> = WormholeBuilder.getInstance<State>(request);
   
   console.log(wormhole.get('missing')); // undefined
   

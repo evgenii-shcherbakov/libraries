@@ -2,10 +2,10 @@ import { Wormhole } from './interfaces';
 import { DynamicWormhole } from './dynamic';
 import { StorageProvider } from './utility';
 
-export type WormholeClass<StorageType extends object> = new (
+export type WormholeFactory<StorageType extends object> = (
   provider: StorageProvider<StorageType>,
 ) => Wormhole<StorageType>;
 
-export type DynamicWormholeClass<StorageType extends object> = new (
+export type DynamicWormholeFactory<StorageType extends object> = (
   provider: StorageProvider<StorageType>,
 ) => DynamicWormhole<StorageType>;
