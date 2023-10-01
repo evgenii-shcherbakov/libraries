@@ -1,5 +1,5 @@
 # Wormhole
-TypeScript library for handle backend state between middlewares in TypeScript frameworks
+TypeScript library for handle backend state between middlewares in TypeScript frameworks.
 
 # Installation
 
