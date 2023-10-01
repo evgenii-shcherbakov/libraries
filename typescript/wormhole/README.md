@@ -1,5 +1,9 @@
 # Wormhole
-TypeScript library for handle backend state between middlewares in TypeScript frameworks.
+TypeScript library for handle backend state between middlewares in TypeScript frameworks
+
+[![npm version](https://img.shields.io/npm/v/@evgenii-shcherbakov/wormhole.svg)](https://npmjs.org/package/@evgenii-shcherbakov/wormhole)
+[![npm license](https://img.shields.io/npm/l/@evgenii-shcherbakov/wormhole.svg)](https://npmjs.org/package/@evgenii-shcherbakov/wormhole)
+[![npm type definitions](https://img.shields.io/npm/types/@evgenii-shcherbakov/wormhole)](https://npmjs.org/package/@evgenii-shcherbakov/wormhole)
 
 # Installation
 
